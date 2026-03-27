@@ -726,3 +726,243 @@ h1, h2, h3, h4, h5, h6 {
     display: none;
   }
 }
+
+/* =========================
+   FOOTER
+========================= */
+
+.site-footer{
+
+padding:60px 0;
+
+background:
+linear-gradient(
+180deg,
+#06122a,
+#020916
+);
+
+border-top:1px solid var(--border-soft);
+
+}
+
+/* títulos */
+
+.footer-title{
+
+color:var(--gold-soft);
+
+font-size:1.1rem;
+
+font-weight:700;
+
+margin-bottom:1rem;
+
+}
+
+/* textos */
+
+.footer-text{
+
+color:var(--text-soft);
+
+font-size:0.95rem;
+
+line-height:1.6;
+
+}
+
+.footer-text-small{
+
+color:#9CA3AF;
+
+font-size:0.85rem;
+
+margin-top:10px;
+
+}
+
+/* links */
+
+.footer-links{
+
+list-style:none;
+padding:0;
+
+}
+
+.footer-links li{
+
+margin-bottom:0.5rem;
+
+}
+
+.footer-links a{
+
+color:#9CA3AF;
+text-decoration:none;
+
+transition:0.3s;
+
+}
+
+.footer-links a:hover{
+
+color:var(--gold-soft);
+
+}
+
+/* redes */
+
+.footer-socials{
+
+display:flex;
+gap:1rem;
+margin-top:1rem;
+
+}
+
+.social-icon{
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+width:42px;
+height:42px;
+
+border-radius:10px;
+
+background:rgba(212,175,55,0.12);
+
+color:var(--gold);
+
+transition:all 0.3s ease;
+
+}
+
+/* =========================
+   ICONOS SOCIALES (MEJORADO)
+========================= */
+
+.social-icon{
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+width:42px;
+height:42px;
+
+border-radius:10px;
+
+background:rgba(212,175,55,0.12);
+
+color:var(--gold);
+
+transition:all 0.35s ease;
+
+}
+
+/* hover base (movimiento) */
+
+.social-icon:hover{
+
+transform:translateY(-4px) scale(1.07);
+
+}
+
+
+/* =========================
+   HOVER POR MARCA
+========================= */
+
+/* YOUTUBE */
+
+.social-icon.youtube:hover{
+
+background:rgba(255,0,0,0.85);
+
+color:#ffffff;
+
+box-shadow:0 0 12px rgba(255,0,0,0.5);
+
+}
+
+/* WHATSAPP */
+
+.social-icon.whatsapp:hover{
+
+background:rgba(37,211,102,0.85);
+
+color:#ffffff;
+
+box-shadow:0 0 12px rgba(37,211,102,0.5);
+
+}
+
+/* GMAIL */
+
+.social-icon.gmail:hover{
+
+background:rgba(234,67,53,0.85);
+
+color:#ffffff;
+
+box-shadow:0 0 12px rgba(234,67,53,0.5);
+
+}
+
+/* versiculo */
+
+.footer-verse{
+
+margin-top:50px;
+
+padding:20px;
+
+text-align:center;
+
+border-top:1px solid rgba(212,175,55,0.2);
+
+background:rgba(212,175,55,0.05);
+
+border-radius:10px;
+
+}
+
+.footer-verse-text{
+
+color:var(--gold-soft);
+
+font-weight:600;
+
+}
+
+.footer-verse-ref{
+
+color:#9CA3AF;
+
+font-size:0.9rem;
+
+}
+
+/* bottom */
+
+.footer-bottom{
+
+margin-top:30px;
+
+text-align:center;
+
+color:#9CA3AF;
+
+}
+
+.footer-copy-small{
+
+font-size:0.8rem;
+
+color:#6B7280;
+
+}

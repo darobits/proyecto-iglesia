@@ -22,7 +22,7 @@ export default function Home() {
     {
       icon: "",
       titulo: "Oración Efectiva",
-      descripcion: "Intercesión por las necesidades espirituales y materiales de todos"
+      descripcion: "Se intercede mediante la Oración por las necesidades de los congregados y la comunidad"
     },
   ]
 
@@ -38,7 +38,7 @@ export default function Home() {
               ¡Bienvenido a Nuestra Iglesia!
             </h2>
             <p style={{ fontSize: "var(--text-base)", color: "var(--text-soft)", maxWidth: "600px", margin: "0 auto" }}>
-              Aquí encontrarás un lugar de paz, comunidad y crecimiento espiritual.
+              Aquí encontrarás un lugar donde se predica la Sana Doctrina para el crecimiento espiritual y mayor comunión con el Señor.
             </p>
           </div>
 
@@ -79,7 +79,7 @@ export default function Home() {
               ¡Te Invitamos a Visitarnos!
             </h2>
             <p style={{ fontSize: "1.05rem", color: "var(--text-soft)", marginBottom: "2rem", maxWidth: "600px", margin: "0 auto 2rem" }}>
-              Nos reunimos todos los domingos a las 9:00 AM y 6:00 PM. 
+              Nos reunimos todos los domingos a las 9:30 AM y los sábados a las 6:00 PM. 
               Si es tu primera vez, te recibiremos con los brazos abiertos.
             </p>
             <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
@@ -141,7 +141,7 @@ export default function Home() {
       {/* Sección de Últimos Contenidos */}
       <section style={{ paddingTop: "3rem", paddingBottom: "3rem" }}>
         <div className="container">
-          <h2 style={{ fontSize: "var(--text-3xl)", fontWeight: 800, marginBottom: "2rem", textAlign: "center" }}>
+          <h2 style={{ fontSize: "var(--text-3xl)", fontWeight: 800, marginBottom: "2rem", textAlign: "center", color: "var(--text-main)" }}>
             Exploración de Contenidos
           </h2>
           <div
