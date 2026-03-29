@@ -110,7 +110,9 @@ export default function Footer() {
 
   {/* EMAIL */}
   <a
-    href="mailto:contacto@iglesia.com"
+    href="https://mail.google.com/mail/?view=cm&to=iglesiaevangelica.graciaygloria@gmail.com"
+    target="_blank"
+    rel="noopener noreferrer"
     title="Email"
     className="social-icon gmail"
   >
