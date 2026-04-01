@@ -6,162 +6,202 @@ import { supabase } from "@/lib/supabase"
 export default function AdminPage() {
 
   const [tipo, setTipo] = useState<"predica" | "alabanza" | null>(null)
+  const [modo, setModo] = useState<"audio" | "youtube">("audio")
 
   const [titulo, setTitulo] = useState("")
-  const [autor, setAutor] = useState("") // predicador o cantante
+  const [autor, setAutor] = useState("")
   const [descripcion, setDescripcion] = useState("")
   const [fecha, setFecha] = useState("")
   const [file, setFile] = useState<File | null>(null)
+  const [youtubeUrl, setYoutubeUrl] = useState("")
+  const [loading, setLoading] = useState(false)
 
-  const handleUpload = async () => {
-
-    if (!file || !tipo) return alert("Faltan datos")
-
-    const bucket = tipo === "predica" ? "predicas" : "alabanzas"
-
-    const fileName = `${Date.now()}-${file.name}`
-
-    // 1. subir archivo
-    const { error: uploadError } = await supabase.storage
-      .from(bucket)
-      .upload(fileName, file)
-
-    if (uploadError) {
-      console.error(uploadError)
-      return alert("Error subiendo archivo")
-    }
-
-    // 2. obtener URL
-    const { data } = supabase.storage
-      .from(bucket)
-      .getPublicUrl(fileName)
-
-    const audioUrl = data.publicUrl
-
-    // 3. guardar en DB
-    const table = tipo === "predica" ? "predicas" : "alabanzas"
-
-    const payload =
-      tipo === "predica"
-        ? {
-            titulo,
-            predicador: autor,
-            descripcion,
-            fecha,
-            audio_url: audioUrl
-          }
-        : {
-            titulo,
-            tipo: "audio",
-            descripcion,
-            fecha,
-            audio_url: audioUrl
-          }
-
-    const { error: dbError } = await supabase
-      .from(table)
-      .insert([payload])
-
-    if (dbError) {
-      console.error(dbError)
-      return alert("Error guardando en DB")
-    }
-
-    alert("Contenido subido correctamente")
-
-    // reset
+  const resetForm = () => {
     setTitulo("")
     setAutor("")
     setDescripcion("")
     setFecha("")
     setFile(null)
+    setYoutubeUrl("")
+  }
+
+  const handleUpload = async () => {
+
+    if (!tipo) return alert("Seleccioná tipo")
+
+    if (!titulo || !autor || !fecha) {
+      return alert("Completá los campos obligatorios")
+    }
+
+    setLoading(true)
+
+    try {
+      let audioUrl: string | null = null
+
+      // ========================
+      // AUDIO
+      // ========================
+      if (modo === "audio") {
+
+        if (!file) {
+          setLoading(false)
+          return alert("Falta archivo")
+        }
+
+        const bucket = tipo === "predica" ? "predicas" : "alabanzas"
+        const fileName = `${Date.now()}-${file.name}`
+
+        const { error: uploadError } = await supabase.storage
+          .from(bucket)
+          .upload(fileName, file)
+
+        if (uploadError) {
+          setLoading(false)
+          return alert("Error subiendo archivo")
+        }
+
+        const { data } = supabase.storage
+          .from(bucket)
+          .getPublicUrl(fileName)
+
+        audioUrl = data.publicUrl
+      }
+
+      // ========================
+      // INSERT DB
+      // ========================
+      const table = tipo === "predica" ? "predicas" : "alabanzas"
+
+      const payload = {
+        titulo,
+        descripcion,
+        fecha,
+        audio_url: audioUrl,
+        youtube_url: modo === "youtube" ? youtubeUrl : null,
+        ...(tipo === "predica"
+          ? { predicador: autor }
+          : { autor })
+      }
+
+      const { error } = await supabase.from(table).insert([payload])
+
+      if (error) {
+        setLoading(false)
+        return alert("Error guardando")
+      }
+
+      alert("Subido correctamente 🚀")
+      resetForm()
+
+    } catch (err) {
+      console.error(err)
+      alert("Error inesperado")
+    }
+
+    setLoading(false)
   }
 
   return (
+    <div className="admin-container">
 
-    <div className="container py-5">
+      <h1 className="admin-title">⚡ Panel de Control</h1>
 
-      <h1 className="mb-4">Panel de Administración</h1>
+      {/* SELECTOR */}
+      <div className="admin-section">
 
-      {/* =========================
-          SELECTOR
-      ========================= */}
-
-      <div className="mb-4">
-
-        <p>¿Qué querés subir?</p>
-
-        <button
-          className={`btn me-2 ${tipo === "predica" ? "btn-gold" : "btn-outline-light"}`}
-          onClick={() => setTipo("predica")}
-        >
-          Predica
+        <button onClick={() => setTipo("predica")}>
+          Predicas
         </button>
 
-        <button
-          className={`btn ${tipo === "alabanza" ? "btn-gold" : "btn-outline-light"}`}
-          onClick={() => setTipo("alabanza")}
-        >
-          Alabanza
+        <button onClick={() => setTipo("alabanza")}>
+          Alabanzas
         </button>
 
       </div>
 
-      {/* =========================
-          FORMULARIO
-      ========================= */}
-
+      {/* FORM */}
       {tipo && (
+        <div className="admin-card">
 
-        <div className="card-modern p-4">
+          <h3>Subir {tipo}</h3>
 
-          <h3 className="mb-3">
-            Subir {tipo === "predica" ? "Predica" : "Alabanza"}
-          </h3>
+          {/* =========================
+              TOGGLE LIMPIO Y CORRECTO
+          ========================= */}
+          <div className="admin-toggle">
+
+            <button
+              type="button"
+              className={`toggle-btn audio ${modo === "audio" ? "active" : ""}`}
+              onClick={() => setModo("audio")}
+            >
+              Audio
+            </button>
+
+            <button
+              type="button"
+              className={`toggle-btn youtube ${modo === "youtube" ? "active" : ""}`}
+              onClick={() => setModo("youtube")}
+            >
+              YouTube
+            </button>
+
+          </div>
+
+          {/* INPUTS */}
 
           <input
             placeholder="Título"
             value={titulo}
             onChange={e => setTitulo(e.target.value)}
-            className="form-control mb-2"
           />
 
           <input
-            placeholder={tipo === "predica" ? "Predicador" : "Autor / Grupo"}
+            placeholder={tipo === "predica" ? "Predicador" : "Autor"}
             value={autor}
             onChange={e => setAutor(e.target.value)}
-            className="form-control mb-2"
           />
 
           <textarea
             placeholder="Descripción"
             value={descripcion}
             onChange={e => setDescripcion(e.target.value)}
-            className="form-control mb-2"
           />
 
           <input
             type="date"
+            value={fecha}
             onChange={e => setFecha(e.target.value)}
-            className="form-control mb-2"
           />
 
-          <input
-            type="file"
-            accept="audio/*"
-            onChange={e => setFile(e.target.files?.[0] || null)}
-            className="form-control mb-3"
-          />
+          {/* AUDIO */}
+          {modo === "audio" && (
+            <input
+              type="file"
+              onChange={e => setFile(e.target.files?.[0] || null)}
+            />
+          )}
 
-          <button className="btn btn-gold" onClick={handleUpload}>
-            Subir
+          {/* YOUTUBE */}
+          {modo === "youtube" && (
+            <input
+              placeholder="URL YouTube"
+              value={youtubeUrl}
+              onChange={e => setYoutubeUrl(e.target.value)}
+            />
+          )}
+
+          {/* BOTON */}
+          <button
+            onClick={handleUpload}
+            disabled={loading}
+          >
+            {loading ? "Subiendo..." : "Subir"}
           </button>
 
         </div>
-
       )}
 
     </div>
-
   )
 }

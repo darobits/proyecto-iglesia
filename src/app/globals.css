@@ -966,3 +966,212 @@ font-size:0.8rem;
 color:#6B7280;
 
 }
+
+
+
+
+/* =========================
+   ESTILOS PAGINA DEL ADMIN
+========================= */
+
+.admin-container {
+  min-height: 100vh;
+  padding: var(--spacing-xl);
+  color: var(--text-main);
+}
+
+/* TITLE */
+
+.admin-title {
+  font-size: var(--text-3xl);
+  text-align: center;
+  margin-bottom: var(--spacing-xl);
+  color: var(--gold);
+  text-shadow:
+    0 0 10px rgba(232, 183, 84, 0.4),
+    0 0 20px rgba(232, 183, 84, 0.2);
+}
+
+/* SELECTOR */
+
+.admin-section {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.admin-section button {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(232,183,84,0.4);
+  background: rgba(232,183,84,0.08);
+  color: var(--gold);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.admin-section button:hover {
+  background: rgba(232,183,84,0.2);
+  box-shadow: 0 6px 18px rgba(232,183,84,0.2);
+}
+
+/* CARD */
+
+.admin-card {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: var(--spacing-lg);
+
+  background: rgba(10, 47, 63, 0.85);
+  border: 1px solid rgba(232, 183, 84, 0.35);
+  border-radius: var(--radius-lg);
+
+  backdrop-filter: blur(10px);
+
+  box-shadow:
+    0 10px 40px rgba(0,0,0,0.5),
+    0 0 20px rgba(232,183,84,0.15);
+}
+
+/* HEADER */
+
+.admin-card h3 {
+  margin-bottom: var(--spacing-md);
+  font-size: var(--text-xl);
+  color: var(--gold);
+}
+
+/* =========================
+   TOGGLE LIMPIO (FINAL)
+========================= */
+
+.admin-toggle {
+  display: flex;
+  gap: 12px;
+  margin-bottom: var(--spacing-md);
+  align-items: center;
+}
+
+/* BOTONES BASE */
+.toggle-btn {
+  flex: 1;
+  height: 56px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+  margin: 0;
+
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255,255,255,0.08);
+
+  background: rgba(255,255,255,0.03) !important;
+  color: var(--text-muted) !important;
+
+  font-weight: 600;
+  line-height: 1;
+
+  cursor: pointer;
+  transition: all 0.25s ease;
+
+  box-shadow: none !important;
+  transform: none !important; /* 🔥 evita saltos */
+}
+
+/* ESTADO INACTIVO FORZADO */
+.toggle-btn:not(.active) {
+  background: rgba(255,255,255,0.03) !important;
+  color: var(--text-muted) !important;
+  box-shadow: none !important;
+}
+
+/* HOVER (SIN MOVER ALTURA) */
+.toggle-btn:hover {
+  background: rgba(255,255,255,0.06) !important;
+  color: var(--text-soft) !important;
+}
+
+/* AUDIO ACTIVO */
+.toggle-btn.audio.active {
+  background: linear-gradient(90deg, #22c55e, #4ade80) !important;
+  color: #022c22 !important;
+
+  box-shadow:
+    0 0 15px rgba(34,197,94,0.7),
+    0 0 30px rgba(34,197,94,0.4) !important;
+}
+
+/* YOUTUBE ACTIVO */
+.toggle-btn.youtube.active {
+  background: #ff0000 !important;
+  color: white !important;
+
+  box-shadow:
+    0 0 15px rgba(255,0,0,0.7),
+    0 0 30px rgba(255,0,0,0.4) !important;
+}
+
+/* =========================
+   INPUTS
+========================= */
+
+.admin-card input,
+.admin-card textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: var(--spacing-sm);
+
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(232,183,84,0.2);
+
+  background: rgba(3, 25, 20, 0.6);
+  color: var(--text-main);
+
+  transition: all 0.25s ease;
+}
+
+.admin-card input::placeholder,
+.admin-card textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.admin-card input:focus,
+.admin-card textarea:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 10px rgba(232,183,84,0.3);
+}
+
+/* FILE INPUT */
+
+.admin-card input[type="file"] {
+  padding: 8px;
+  cursor: pointer;
+}
+
+/* BOTON PRINCIPAL */
+
+.admin-card button:last-child {
+  width: 100%;
+  margin-top: var(--spacing-md);
+
+  background: linear-gradient(90deg, var(--gold), var(--teal-bright));
+  color: var(--text-dark);
+
+  font-weight: 700;
+  padding: 12px;
+
+  border: none;
+  border-radius: var(--radius-md);
+
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.admin-card button:last-child:hover {
+  box-shadow: 0 10px 30px rgba(232,183,84,0.35);
+}

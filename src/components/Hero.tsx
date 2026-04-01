@@ -47,6 +47,7 @@ export default function Hero() {
               height={400}
               priority={false}
               loading="lazy"
+              style={{ marginLeft: '60px' }}
               className="hero-logo"
               sizes="(max-width: 480px) 200px, (max-width: 768px) 280px, 400px"
             />

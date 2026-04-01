@@ -7,6 +7,7 @@ export default function ContactoPage() {
   const [formData, setFormData] = useState({
     nombre: "",
     email: "",
+    telefono: "", // 👈 agregado
     asunto: "",
     mensaje: "",
   })
@@ -35,15 +36,14 @@ export default function ContactoPage() {
         process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
       )
 
-      await emailjs.send(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_AUTOREPLY!,
-        formData,
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
-      )
-
       setEnviado(true)
-      setFormData({ nombre: "", email: "", asunto: "", mensaje: "" })
+      setFormData({
+        nombre: "",
+        email: "",
+        telefono: "", // 👈 agregado
+        asunto: "",
+        mensaje: "",
+      })
 
       setTimeout(() => setEnviado(false), 5000)
 
@@ -164,6 +164,28 @@ export default function ContactoPage() {
                   value={formData.email}
                   onChange={handleChange}
                   required
+                  style={{
+                    width: "100%",
+                    padding: "0.75rem 1rem",
+                    border: "1px solid rgba(232, 183, 84, 0.3)",
+                    borderRadius: "8px",
+                    background: "rgba(9, 53, 100, 0.5)",
+                    color: "var(--text-main)",
+                  }}
+                />
+              </div>
+
+              {/* TELÉFONO */}
+              <div style={{ marginBottom: "1.5rem" }}>
+                <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: 600, color: "var(--text-main)" }}>
+                  Teléfono / Celular
+                </label>
+                <input
+                  type="text"
+                  name="telefono"
+                  value={formData.telefono}
+                  onChange={handleChange}
+                  placeholder="Ej: +54 11 1234-5678"
                   style={{
                     width: "100%",
                     padding: "0.75rem 1rem",
