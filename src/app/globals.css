@@ -1048,16 +1048,16 @@ color:#6B7280;
 ========================= */
 
 .admin-toggle {
-  display: flex;
+  display: grid; /* 🔥 CAMBIO CLAVE */
+  grid-template-columns: 1fr 1fr;
   gap: 12px;
   margin-bottom: var(--spacing-md);
-  align-items: center;
 }
 
-/* BOTONES BASE */
+/* BOTONES */
 .toggle-btn {
-  flex: 1;
   height: 56px;
+  width: 100%;
 
   display: flex;
   align-items: center;
@@ -1079,17 +1079,19 @@ color:#6B7280;
   transition: all 0.25s ease;
 
   box-shadow: none !important;
-  transform: none !important; /* 🔥 evita saltos */
+  transform: none !important;
+
+  box-sizing: border-box; /* 🔥 clave */
 }
 
-/* ESTADO INACTIVO FORZADO */
+/* INACTIVO */
 .toggle-btn:not(.active) {
   background: rgba(255,255,255,0.03) !important;
   color: var(--text-muted) !important;
-  box-shadow: none !important;
+  
 }
 
-/* HOVER (SIN MOVER ALTURA) */
+/* HOVER */
 .toggle-btn:hover {
   background: rgba(255,255,255,0.06) !important;
   color: var(--text-soft) !important;
@@ -1101,18 +1103,19 @@ color:#6B7280;
   color: #022c22 !important;
 
   box-shadow:
-    0 0 15px rgba(34,197,94,0.7),
-    0 0 30px rgba(34,197,94,0.4) !important;
+    0 0 12px rgba(34,197,94,0.6),
+    0 0 24px rgba(34,197,94,0.3); /* 🔥 bajamos intensidad */
 }
 
 /* YOUTUBE ACTIVO */
 .toggle-btn.youtube.active {
   background: #ff0000 !important;
   color: white !important;
+  
 
   box-shadow:
-    0 0 15px rgba(255,0,0,0.7),
-    0 0 30px rgba(255,0,0,0.4) !important;
+    0 0 12px rgba(255,0,0,0.6),
+    0 0 24px rgba(255,0,0,0.3); /* 🔥 igualamos al verde */
 }
 
 /* =========================
@@ -1155,7 +1158,9 @@ color:#6B7280;
 
 /* BOTON PRINCIPAL */
 
-.admin-card button:last-child {
+/* BOTON PRINCIPAL SUBMIT (SOLO SUBIR) */
+
+.admin-submit-btn {
   width: 100%;
   margin-top: var(--spacing-md);
 
@@ -1172,6 +1177,95 @@ color:#6B7280;
   transition: all 0.3s ease;
 }
 
-.admin-card button:last-child:hover {
+.admin-submit-btn:hover {
   box-shadow: 0 10px 30px rgba(232,183,84,0.35);
+}
+
+/***estilo icono calendario**/
+
+.date-input {
+  color-scheme: white; /* base */
+  position: relative;
+}
+
+/* 🔥 Chrome / Edge / Safari */
+.date-input::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(2);
+  opacity: 1;
+  cursor: pointer;
+}
+
+/* 🔥 Hace que no quede oscuro por background */
+.date-input::-webkit-datetime-edit {
+  color: var(--text-main);
+}
+
+/* =========================
+   SIDEBAR ADMIN
+========================= */
+
+.sidebar {
+  width: 240px;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+
+  background: rgba(10, 47, 63, 0.95);
+  border-right: 1px solid rgba(232,183,84,0.2);
+
+  padding: 20px;
+}
+
+.sidebar-title {
+  color: var(--gold);
+  margin-bottom: 20px;
+}
+
+.sidebar-item {
+  padding: 12px;
+  margin-bottom: 8px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+.sidebar-item:hover {
+  background: rgba(232,183,84,0.1);
+}
+
+.sidebar-item.active {
+  background: rgba(232,183,84,0.2);
+  color: var(--gold);
+}
+
+/* =========================
+   LISTADO ADMIN
+========================= */
+
+.listado {
+  padding: 30px;
+}
+
+.card-admin {
+  background: rgba(10,47,63,0.8);
+  border: 1px solid rgba(232,183,84,0.2);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.card-admin h4 {
+  color: var(--gold);
+}
+
+.card-actions {
+  margin-top: 10px;
+}
+
+.card-actions button {
+  background: red;
+  border: none;
+  padding: 6px 10px;
+  cursor: pointer;
 }

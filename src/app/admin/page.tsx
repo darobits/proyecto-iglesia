@@ -2,8 +2,11 @@
 
 import { useState } from "react"
 import { supabase } from "@/lib/supabase"
+import { useRouter } from "next/navigation"
 
 export default function AdminPage() {
+
+  const router = useRouter()
 
   const [tipo, setTipo] = useState<"predica" | "alabanza" | null>(null)
   const [modo, setModo] = useState<"audio" | "youtube">("audio")
@@ -15,6 +18,13 @@ export default function AdminPage() {
   const [file, setFile] = useState<File | null>(null)
   const [youtubeUrl, setYoutubeUrl] = useState("")
   const [loading, setLoading] = useState(false)
+
+  const isFormValid =
+    titulo &&
+    autor &&
+    descripcion &&
+    fecha &&
+    (modo === "audio" ? file : youtubeUrl)
 
   const resetForm = () => {
     setTitulo("")
@@ -29,8 +39,8 @@ export default function AdminPage() {
 
     if (!tipo) return alert("Seleccioná tipo")
 
-    if (!titulo || !autor || !fecha) {
-      return alert("Completá los campos obligatorios")
+    if (!isFormValid) {
+      return alert("Completá todos los campos obligatorios")
     }
 
     setLoading(true)
@@ -38,22 +48,14 @@ export default function AdminPage() {
     try {
       let audioUrl: string | null = null
 
-      // ========================
-      // AUDIO
-      // ========================
       if (modo === "audio") {
 
-        if (!file) {
-          setLoading(false)
-          return alert("Falta archivo")
-        }
-
         const bucket = tipo === "predica" ? "predicas" : "alabanzas"
-        const fileName = `${Date.now()}-${file.name}`
+        const fileName = `${Date.now()}-${file!.name}`
 
         const { error: uploadError } = await supabase.storage
           .from(bucket)
-          .upload(fileName, file)
+          .upload(fileName, file!)
 
         if (uploadError) {
           setLoading(false)
@@ -67,9 +69,6 @@ export default function AdminPage() {
         audioUrl = data.publicUrl
       }
 
-      // ========================
-      // INSERT DB
-      // ========================
       const table = tipo === "predica" ? "predicas" : "alabanzas"
 
       const payload = {
@@ -102,105 +101,133 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="admin-container">
+    <div style={{ display: "flex" }}>
 
-      <h1 className="admin-title">⚡ Panel de Control</h1>
+      {/* 🔥 SIDEBAR */}
+      <aside className="sidebar">
 
-      {/* SELECTOR */}
-      <div className="admin-section">
+        <h2 className="sidebar-title">Admin</h2>
 
-        <button onClick={() => setTipo("predica")}>
+        <div className="sidebar-item active">Crear</div>
+
+        <div
+          className="sidebar-item"
+          onClick={() => router.push("/admin/predicas")}
+        >
           Predicas
-        </button>
+        </div>
 
-        <button onClick={() => setTipo("alabanza")}>
+        <div
+          className="sidebar-item"
+          onClick={() => router.push("/admin/alabanzas")}
+        >
           Alabanzas
-        </button>
+        </div>
 
-      </div>
+      </aside>
 
-      {/* FORM */}
-      {tipo && (
-        <div className="admin-card">
+      {/* 🔥 CONTENIDO */}
+      <main style={{ marginLeft: 240, width: "100%" }}>
 
-          <h3>Subir {tipo}</h3>
+        <div className="admin-container">
 
-          {/* =========================
-              TOGGLE LIMPIO Y CORRECTO
-          ========================= */}
-          <div className="admin-toggle">
+          <h1 className="admin-title">⚡ Panel de Control</h1>
 
-            <button
-              type="button"
-              className={`toggle-btn audio ${modo === "audio" ? "active" : ""}`}
-              onClick={() => setModo("audio")}
-            >
-              Audio
-            </button>
-
-            <button
-              type="button"
-              className={`toggle-btn youtube ${modo === "youtube" ? "active" : ""}`}
-              onClick={() => setModo("youtube")}
-            >
-              YouTube
-            </button>
-
+          <div className="admin-section">
+            <button onClick={() => setTipo("predica")}>Predicas</button>
+            <button onClick={() => setTipo("alabanza")}>Alabanzas</button>
           </div>
 
-          {/* INPUTS */}
+          {tipo && (
+            <div className="admin-card">
 
-          <input
-            placeholder="Título"
-            value={titulo}
-            onChange={e => setTitulo(e.target.value)}
-          />
+              <h3>Subir {tipo}</h3>
 
-          <input
-            placeholder={tipo === "predica" ? "Predicador" : "Autor"}
-            value={autor}
-            onChange={e => setAutor(e.target.value)}
-          />
+              <div className="admin-toggle">
 
-          <textarea
-            placeholder="Descripción"
-            value={descripcion}
-            onChange={e => setDescripcion(e.target.value)}
-          />
+                <button
+                  type="button"
+                  className={`toggle-btn audio ${modo === "audio" ? "active" : ""}`}
+                  onClick={() => setModo("audio")}
+                >
+                  Audio
+                </button>
 
-          <input
-            type="date"
-            value={fecha}
-            onChange={e => setFecha(e.target.value)}
-          />
+                <button
+                  type="button"
+                  className={`toggle-btn youtube ${modo === "youtube" ? "active" : ""}`}
+                  onClick={() => setModo("youtube")}
+                >
+                  YouTube
+                </button>
 
-          {/* AUDIO */}
-          {modo === "audio" && (
-            <input
-              type="file"
-              onChange={e => setFile(e.target.files?.[0] || null)}
-            />
+              </div>
+
+              {/* FORM */}
+              <label>Título</label>
+              <input
+                placeholder="Ej: Estudio de Romanos"
+                value={titulo}
+                onChange={e => setTitulo(e.target.value)}
+              />
+
+              <label>{tipo === "predica" ? "Predicador" : "Autor"}</label>
+              <input
+                placeholder="Ej: Hno Juan Lopez"
+                value={autor}
+                onChange={e => setAutor(e.target.value)}
+              />
+
+              <label>Descripción</label>
+              <textarea
+                placeholder="Ej: Capitulo 1: 1-10"
+                value={descripcion}
+                onChange={e => setDescripcion(e.target.value)}
+              />
+
+              <label>Fecha</label>
+              <input
+                type="date"
+                value={fecha}
+                onChange={e => setFecha(e.target.value)}
+                className="date-input"
+              />
+
+              {modo === "audio" && (
+                <>
+                  <label>Seleccionar archivo</label>
+                  <input
+                    type="file"
+                    onChange={e => setFile(e.target.files?.[0] || null)}
+                  />
+                </>
+              )}
+
+              {modo === "youtube" && (
+                <>
+                  <label>URL YouTube</label>
+                  <input
+                    placeholder="https://youtube.com/..."
+                    value={youtubeUrl}
+                    onChange={e => setYoutubeUrl(e.target.value)}
+                  />
+                </>
+              )}
+
+              <button
+                className="admin-submit-btn"
+                onClick={handleUpload}
+                disabled={!isFormValid || loading}
+              >
+                {loading ? "Subiendo..." : "Subir"}
+              </button>
+
+            </div>
           )}
-
-          {/* YOUTUBE */}
-          {modo === "youtube" && (
-            <input
-              placeholder="URL YouTube"
-              value={youtubeUrl}
-              onChange={e => setYoutubeUrl(e.target.value)}
-            />
-          )}
-
-          {/* BOTON */}
-          <button
-            onClick={handleUpload}
-            disabled={loading}
-          >
-            {loading ? "Subiendo..." : "Subir"}
-          </button>
 
         </div>
-      )}
+
+      </main>
 
     </div>
   )
