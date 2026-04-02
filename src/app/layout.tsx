@@ -1,8 +1,7 @@
 import './globals.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-import Navbar from "@/components/Navbar"
-import Footer from "@/components/Footer"
+import LayoutClient from "@/components/LayoutClient"
 
 export const metadata = {
   title: "Iglesia Evangélica Gracia y Gloria | Predicas y Alabanzas",
@@ -44,12 +43,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="icon" href="/images/logo_iglesia.png" />
         <link rel="canonical" href="https://iglesiagraciagloria.org" />
       </head>
+
       <body>
-        <Navbar />
-        <main>
+        <LayoutClient>
           {children}
-        </main>
-        <Footer />
+        </LayoutClient>
       </body>
     </html>
   )

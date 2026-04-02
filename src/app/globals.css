@@ -1269,3 +1269,164 @@ color:#6B7280;
   padding: 6px 10px;
   cursor: pointer;
 }
+
+
+
+/*** =========================
+   🔐 LOGIN MODERNO
+========================= */
+
+.login-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* fondo profundo */
+  background: radial-gradient(circle at center, #0f2f3a 0%, #061a22 100%);
+}
+
+/* =========================
+   📦 CARD
+========================= */
+
+.login-card {
+  width: 340px;
+  padding: 30px;
+
+  background: rgba(1, 68, 66, 0.85);
+  backdrop-filter: blur(10px);
+
+  border-radius: 16px;
+
+  box-shadow: 0 0 25px rgba(217, 219, 222, 0.2);
+
+  text-align: center;
+}
+
+.login-card h2 {
+  color: #fdfcf8;
+  margin-bottom: 20px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* =========================
+   ✏️ INPUTS
+========================= */
+
+.login-card input {
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 12px;
+
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+
+  transition: all 0.2s ease;
+}
+
+.login-card input::placeholder {
+  color: rgba(255,255,255,0.5);
+}
+
+.login-card input:focus {
+  outline: none;
+  border-color: #2362c1;
+  box-shadow: 0 0 10px rgba(35, 98, 193, 0.4);
+}
+
+/* =========================
+   🔒 PASSWORD WRAPPER
+========================= */
+
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  padding-right: 42px; /* 🔥 espacio real para el icono */
+}
+
+/* 👁 BOTÓN OJO (FIX IMPORTANTE) */
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  background: transparent !important; /* 🔥 evita heredar botón azul */
+  border: none !important;
+  padding: 0;
+
+  cursor: pointer;
+
+  font-size: 16px;
+  color: rgba(255,255,255,0.6);
+
+  transition: all 0.2s ease;
+}
+
+.toggle-password:hover {
+  color: white;
+  opacity: 1;
+}
+
+/* =========================
+   🔘 BOTÓN LOGIN
+========================= */
+
+.login-card button:not(.toggle-password) {
+  width: 100%;
+  padding: 12px;
+
+  border-radius: 8px;
+  border: none;
+
+  background: linear-gradient(135deg, #2362c1, #3a7bd5);
+  color: white;
+
+  font-weight: 600;
+  letter-spacing: 0.5px;
+
+  transition: all 0.2s ease;
+}
+
+.login-card button:not(.toggle-password):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(35, 98, 193, 0.4);
+}
+
+.login-card button:not(.toggle-password):active {
+  transform: scale(0.98);
+}
+
+/* =========================
+   ⚠️ ERROR
+========================= */
+
+.login-error {
+  background: rgba(255, 0, 0, 0.1);
+  color: #ff6b6b;
+  padding: 8px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+}
+
+/* =========================
+   🏛 LOGO LOGIN
+========================= */
+
+.login-logo {
+  width: 180px;
+  margin-bottom: 15px;
+
+  object-fit: contain;
+
+  /* glow suave dorado */
+  filter: drop-shadow(0 0 6px rgba(232,183,84,0.4));
+}
