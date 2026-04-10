@@ -1,8 +1,11 @@
+
+
+
 "use client"
 
 import { useState } from "react"
-import { supabase } from "@/lib/supabase"
 import { useRouter } from "next/navigation"
+import { supabase } from "@/lib/supabaseClient"
 
 export default function LoginPage() {
 
@@ -10,46 +13,69 @@ export default function LoginPage() {
 
   const [dni, setDni] = useState("")
   const [password, setPassword] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  const handleLogin = async () => {
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault()
 
-    if (!dni || !password) return alert("Completá los datos")
+    if (!dni || !password) {
+      return alert("Completá todos los campos")
+    }
 
     setLoading(true)
 
-    const emailFake = `${dni}@admin.com`
+    try {
+      // 🔑 EMAIL GENERADO DESDE DNI
+      const email = `${dni}@admin.com`
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: emailFake,
-      password
-    })
+      // 🔐 LOGIN SUPABASE
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      })
 
-    if (error) {
-      setLoading(false)
-      return alert("Credenciales inválidas")
+      if (error || !data.user) {
+        setLoading(false)
+        return alert("Credenciales incorrectas")
+      }
+
+      const userId = data.user.id
+
+      // 🔍 BUSCAR USUARIO EN TABLA ADMIN
+      const { data: adminData, error: adminError } = await supabase
+        .from("usuarios_admin")
+        .select("*")
+        .eq("id", userId)
+        .single()
+
+      if (adminError || !adminData) {
+        await supabase.auth.signOut()
+        setLoading(false)
+        return alert("No tenés permisos de administrador")
+      }
+
+      if (adminData.rol !== "admin") {
+        await supabase.auth.signOut()
+        setLoading(false)
+        return alert("Acceso denegado")
+      }
+
+      // ✅ LOGIN OK
+      router.push("/admin")
+
+    } catch (err) {
+      console.error(err)
+      alert("Error inesperado")
     }
-
-    const { data: userData } = await supabase
-      .from("usuarios_admin")
-      .select("*")
-      .eq("id", data.user.id)
-      .single()
-
-    localStorage.setItem("user_role", userData.rol)
-
-    router.push("/admin")
 
     setLoading(false)
   }
 
   return (
     <div className="login-container">
+      <form className="login-card" onSubmit={handleLogin}>
 
-      <div className="login-card">
-
-        {/* 🔥 LOGO */}
+         {/* 🔥 LOGO */}
         <img
           src="/images/logo_iglesia.png"
           alt="Logo Iglesia"
@@ -59,36 +85,24 @@ export default function LoginPage() {
         <h2>Iniciar sesión</h2>
 
         <input
+          type="text"
           placeholder="DNI"
           value={dni}
-          onChange={e => setDni(e.target.value)}
+          onChange={(e) => setDni(e.target.value)}
         />
 
-        <div className="password-wrapper">
+        <input
+          type="password"
+          placeholder="Contraseña"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-          <input
-            type={showPassword ? "text" : "password"}
-            placeholder="Contraseña"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-          />
-
-          <button
-            type="button"
-            className="toggle-password"
-            onClick={() => setShowPassword(prev => !prev)}
-          >
-            👁️
-          </button>
-
-        </div>
-
-        <button onClick={handleLogin}>
+        <button type="submit" disabled={loading}>
           {loading ? "Ingresando..." : "Ingresar"}
         </button>
 
-      </div>
-
+      </form>
     </div>
   )
 }

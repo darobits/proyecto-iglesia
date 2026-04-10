@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { supabase } from "@/lib/supabase"
 import { useRouter } from "next/navigation"
 
@@ -18,6 +18,46 @@ export default function AdminPage() {
   const [file, setFile] = useState<File | null>(null)
   const [youtubeUrl, setYoutubeUrl] = useState("")
   const [loading, setLoading] = useState(false)
+  const [userEmail, setUserEmail] = useState("")
+
+  // 🔐 PROTECCIÓN DE ACCESO + USER
+  useEffect(() => {
+    const checkUser = async () => {
+
+      const { data: { user } } = await supabase.auth.getUser()
+
+      if (!user) {
+        router.push("/login")
+        return
+      }
+
+      setUserEmail(user.email || "")
+
+      useEffect(() => {
+  const checkUser = async () => {
+
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if (!user) {
+      router.push("/login")
+      return
+    }
+
+    const { data: adminData, error } = await supabase
+      .from("usuarios_admin")
+      .select("rol")
+      .eq("id", user.id)
+      .single()
+
+    if (error || !adminData || adminData.rol !== "admin") {
+      await supabase.auth.signOut()
+      router.push("/login")
+    }
+
+  }
+
+  checkUser()
+}, [router])
 
   const isFormValid =
     titulo &&
@@ -43,6 +83,19 @@ export default function AdminPage() {
       return alert("Completá todos los campos obligatorios")
     }
 
+    // 🔍 VALIDACIONES EXTRA
+    if (modo === "audio" && file) {
+      if (file.size > 20 * 1024 * 1024) {
+        return alert("El archivo es demasiado grande (máx 20MB)")
+      }
+    }
+
+    if (modo === "youtube") {
+      if (!youtubeUrl.includes("youtube.com") && !youtubeUrl.includes("youtu.be")) {
+        return alert("URL de YouTube inválida")
+      }
+    }
+
     setLoading(true)
 
     try {
@@ -51,7 +104,7 @@ export default function AdminPage() {
       if (modo === "audio") {
 
         const bucket = tipo === "predica" ? "predicas" : "alabanzas"
-        const fileName = `${Date.now()}-${file!.name}`
+        const fileName = `${tipo}/${Date.now()}-${file!.name}`
 
         const { error: uploadError } = await supabase.storage
           .from(bucket)
@@ -90,7 +143,10 @@ export default function AdminPage() {
       }
 
       alert("Subido correctamente 🚀")
+
       resetForm()
+      setTipo(null)
+      setModo("audio")
 
     } catch (err) {
       console.error(err)
@@ -100,6 +156,12 @@ export default function AdminPage() {
     setLoading(false)
   }
 
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
+    localStorage.removeItem("user_role")
+    router.push("/login")
+  }
+
   return (
     <div style={{ display: "flex" }}>
 
@@ -107,6 +169,8 @@ export default function AdminPage() {
       <aside className="sidebar">
 
         <h2 className="sidebar-title">Admin</h2>
+
+        <p className="user-email">{userEmail}</p>
 
         <div className="sidebar-item active">Crear</div>
 
@@ -122,6 +186,13 @@ export default function AdminPage() {
           onClick={() => router.push("/admin/alabanzas")}
         >
           Alabanzas
+        </div>
+
+        <div
+          className="sidebar-item"
+          onClick={handleLogout}
+        >
+          Cerrar sesión
         </div>
 
       </aside>
@@ -198,6 +269,7 @@ export default function AdminPage() {
                   <label>Seleccionar archivo</label>
                   <input
                     type="file"
+                    accept="audio/*"
                     onChange={e => setFile(e.target.files?.[0] || null)}
                   />
                 </>
