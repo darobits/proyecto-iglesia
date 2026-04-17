@@ -1,5 +1,11 @@
 import { supabase } from "./supabase"
 
+export type UsuarioAdmin = {
+  nombre: string | null
+  rol: string | null
+  permisos: string[]
+}
+
 export async function getUserWithRole() {
   const { data: userData } = await supabase.auth.getUser()
 
@@ -7,13 +13,14 @@ export async function getUserWithRole() {
 
   const { data } = await supabase
     .from("usuarios_admin")
-    .select("rol, permisos")
+    .select("nombre, rol, permisos")
     .eq("id", userData.user.id)
     .single()
 
   return {
     user: userData.user,
-    rol: data?.rol,
+    nombre: data?.nombre || null,
+    rol: data?.rol || null,
     permisos: data?.permisos || []
   }
 }

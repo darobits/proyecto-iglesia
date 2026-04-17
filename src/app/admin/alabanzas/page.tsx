@@ -1,5 +1,5 @@
-import Listado from "@/components/admin/Listado"
+import ListadoUsuarios from "@/app/admin/components/ListadoUsuarios"
 
 export default function AlabanzasPage() {
-  return <Listado tabla="alabanzas" />
+  return <ListadoUsuarios tabla="alabanzas" />
 }

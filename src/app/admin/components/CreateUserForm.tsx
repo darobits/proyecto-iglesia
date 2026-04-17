@@ -2,47 +2,42 @@
 
 import { useState } from "react"
 import { supabase } from "@/lib/supabase"
-import type { FormEvent } from "react"
+import PermissionsSelector from "./PermissionsSelector"
 
 export default function CreateUserForm() {
-  const [email, setEmail] = useState<string>("")
-  const [password, setPassword] = useState<string>("")
-  const [rol, setRol] = useState<string>("editor")
+  const [nombre, setNombre] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
   const [permisos, setPermisos] = useState<string[]>([])
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+
+    if (!nombre || !email || !password) {
+      alert("Completar todos los campos")
+      return
+    }
 
     const { data, error } = await supabase.auth.signUp({
       email,
       password
     })
 
-    if (error) {
-      alert(error.message)
-      return
-    }
+    if (error) return alert(error.message)
 
     const userId = data.user?.id
-
-    if (!userId) {
-      alert("Error creando usuario")
-      return
-    }
+    if (!userId) return alert("Error creando usuario")
 
     const { error: insertError } = await supabase
       .from("usuarios_admin")
       .insert({
         id: userId,
         email,
-        rol,
+        nombre,
         permisos
       })
 
-    if (insertError) {
-      alert(insertError.message)
-      return
-    }
+    if (insertError) return alert(insertError.message)
 
     alert("Usuario creado correctamente")
   }
@@ -52,23 +47,30 @@ export default function CreateUserForm() {
       <h2>Crear Usuario</h2>
 
       <input
+        type="text"
+        placeholder="Nombre"
+        value={nombre}
+        onChange={(e) => setNombre(e.target.value)}
+      />
+
+      <input
         type="email"
+        placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
       />
 
       <input
         type="password"
+        placeholder="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
       />
 
-      <select value={rol} onChange={(e) => setRol(e.target.value)}>
-        <option value="editor">Editor</option>
-        <option value="admin">Admin</option>
-      </select>
+      <PermissionsSelector
+        selected={permisos}
+        setSelected={setPermisos}
+      />
 
       <button type="submit">Crear usuario</button>
     </form>

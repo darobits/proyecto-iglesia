@@ -1430,3 +1430,257 @@ color:#6B7280;
   /* glow suave dorado */
   filter: drop-shadow(0 0 6px rgba(232,183,84,0.4));
 }
+
+
+/* ===== SIDEBAR ===== */
+
+.sidebar {
+  width: 240px;
+  height: 100vh;
+  background: #0b1a2a;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.sidebar-title {
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar a {
+  color: #cbd5f5;
+  text-decoration: none;
+  padding: 8px;
+  border-radius: 6px;
+  transition: 0.2s;
+}
+
+.sidebar a:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.sidebar a.active {
+  background: #2563eb;
+  color: white;
+}
+
+/* FOOTER */
+.sidebar-footer {
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 15px;
+}
+
+.logout-btn {
+  margin-top: 10px;
+  width: 100%;
+  padding: 8px;
+  background: #ef4444;
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+/* ===== ADMIN LAYOUT ===== */
+
+.admin-container {
+  display: flex;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 240px;
+  height: 100vh;
+  background: #0b1a2a;
+  color: white;
+  transition: all 0.3s ease;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.sidebar.collapsed {
+  width: 70px;
+}
+
+/* CONTENIDO */
+
+.admin-content {
+  margin-left: 240px;
+  padding: 30px;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+/* CUANDO SIDEBAR COLAPSADO */
+
+.admin-content.collapsed {
+  margin-left: 70px;
+}
+
+/* ===== BOTÓN TOGGLE ===== */
+
+.toggle-btn {
+  position: fixed;
+  top: 20px;
+  left: 220px; /* pegado al borde del sidebar */
+  z-index: 1100;
+
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  border: none;
+  color: white;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 40px;
+  height: 40px;
+
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  transition: all 0.3s ease;
+}
+
+.toggle-btn:hover {
+  transform: scale(1.1);
+}
+
+.toggle-btn.collapsed {
+  left: 60px;
+}
+
+/* ===== CARDS ===== */
+
+.card {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(14px);
+  padding: 25px;
+  border-radius: 16px;
+
+  border: 1px solid rgba(255,255,255,0.08);
+
+  color: #e5e7eb;
+
+  transition: all 0.3s ease;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+}
+
+/* CARD TITULOS */
+
+.card h3 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.card p {
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+/*card buttons*/
+
+.card button {
+  margin-top: 15px;
+  padding: 10px 14px;
+
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  border: none;
+  color: white;
+
+  border-radius: 8px;
+  cursor: pointer;
+
+  font-weight: 500;
+
+  transition: all 0.2s ease;
+}
+
+.card button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(59,130,246,0.4);
+}
+
+
+/* tablas usuarios/predicas/alabanzas */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background: rgba(255,255,255,0.05);
+}
+
+th {
+  text-align: left;
+  padding: 12px;
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+td {
+  padding: 14px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+tr:hover {
+  background: rgba(255,255,255,0.03);
+}
+
+/*buttons de acciones en tablas*/
+
+td button {
+  background: #ef4444;
+  border: none;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+td button:hover {
+  background: #dc2626;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .admin-content {
+    margin-left: 0;
+  }
+
+  .toggle-btn {
+    left: 20px;
+  }
+}
