@@ -1,306 +1,134 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
 import { supabase } from "@/lib/supabase"
 import { useRouter } from "next/navigation"
+import type { User } from "@supabase/supabase-js"
+
+type Rol = "admin" | "editor"
 
 export default function AdminPage() {
+  const [user, setUser] = useState<User | null>(null)
+  const [userRole, setUserRole] = useState<Rol | null>(null)
+
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [rol, setRol] = useState<Rol>("editor")
 
   const router = useRouter()
 
-  const [tipo, setTipo] = useState<"predica" | "alabanza" | null>(null)
-  const [modo, setModo] = useState<"audio" | "youtube">("audio")
-
-  const [titulo, setTitulo] = useState("")
-  const [autor, setAutor] = useState("")
-  const [descripcion, setDescripcion] = useState("")
-  const [fecha, setFecha] = useState("")
-  const [file, setFile] = useState<File | null>(null)
-  const [youtubeUrl, setYoutubeUrl] = useState("")
-  const [loading, setLoading] = useState(false)
-  const [userEmail, setUserEmail] = useState("")
-
-  // 🔐 PROTECCIÓN DE ACCESO + USER
   useEffect(() => {
-    const checkUser = async () => {
+    const load = async () => {
+      const { data } = await supabase.auth.getUser()
 
-      const { data: { user } } = await supabase.auth.getUser()
-
-      if (!user) {
+      if (!data.user) {
         router.push("/login")
         return
       }
 
-      setUserEmail(user.email || "")
+      setUser(data.user)
 
-      useEffect(() => {
-  const checkUser = async () => {
+      const { data: roleData } = await supabase
+        .from("usuarios_admin")
+        .select("rol")
+        .eq("id", data.user.id)
+        .single()
 
-    const { data: { user } } = await supabase.auth.getUser()
-
-    if (!user) {
-      router.push("/login")
-      return
+      setUserRole(roleData?.rol ?? null)
     }
 
-    const { data: adminData, error } = await supabase
-      .from("usuarios_admin")
-      .select("rol")
-      .eq("id", user.id)
-      .single()
+    load()
+  }, []) // no queremos que esto se ejecute más de una vez, por eso no ponemos dependencias
+  //esto es un patrón común para verificar la autenticación al cargar una página protegida
 
-    if (error || !adminData || adminData.rol !== "admin") {
-      await supabase.auth.signOut()
-      router.push("/login")
-    }
-
-  }
-
-  checkUser()
-}, [router])
-
-  const isFormValid =
-    titulo &&
-    autor &&
-    descripcion &&
-    fecha &&
-    (modo === "audio" ? file : youtubeUrl)
-
-  const resetForm = () => {
-    setTitulo("")
-    setAutor("")
-    setDescripcion("")
-    setFecha("")
-    setFile(null)
-    setYoutubeUrl("")
-  }
-
-  const handleUpload = async () => {
-
-    if (!tipo) return alert("Seleccioná tipo")
-
-    if (!isFormValid) {
-      return alert("Completá todos los campos obligatorios")
-    }
-
-    // 🔍 VALIDACIONES EXTRA
-    if (modo === "audio" && file) {
-      if (file.size > 20 * 1024 * 1024) {
-        return alert("El archivo es demasiado grande (máx 20MB)")
-      }
-    }
-
-    if (modo === "youtube") {
-      if (!youtubeUrl.includes("youtube.com") && !youtubeUrl.includes("youtu.be")) {
-        return alert("URL de YouTube inválida")
-      }
-    }
-
-    setLoading(true)
-
-    try {
-      let audioUrl: string | null = null
-
-      if (modo === "audio") {
-
-        const bucket = tipo === "predica" ? "predicas" : "alabanzas"
-        const fileName = `${tipo}/${Date.now()}-${file!.name}`
-
-        const { error: uploadError } = await supabase.storage
-          .from(bucket)
-          .upload(fileName, file!)
-
-        if (uploadError) {
-          setLoading(false)
-          return alert("Error subiendo archivo")
-        }
-
-        const { data } = supabase.storage
-          .from(bucket)
-          .getPublicUrl(fileName)
-
-        audioUrl = data.publicUrl
-      }
-
-      const table = tipo === "predica" ? "predicas" : "alabanzas"
-
-      const payload = {
-        titulo,
-        descripcion,
-        fecha,
-        audio_url: audioUrl,
-        youtube_url: modo === "youtube" ? youtubeUrl : null,
-        ...(tipo === "predica"
-          ? { predicador: autor }
-          : { autor })
-      }
-
-      const { error } = await supabase.from(table).insert([payload])
-
-      if (error) {
-        setLoading(false)
-        return alert("Error guardando")
-      }
-
-      alert("Subido correctamente 🚀")
-
-      resetForm()
-      setTipo(null)
-      setModo("audio")
-
-    } catch (err) {
-      console.error(err)
-      alert("Error inesperado")
-    }
-
-    setLoading(false)
-  }
-
-  const handleLogout = async () => {
+  const logout = async () => {
     await supabase.auth.signOut()
-    localStorage.removeItem("user_role")
     router.push("/login")
   }
 
+  const crearUsuario = async () => {
+    if (userRole !== "admin") {
+      alert("No tenés permisos")
+      return
+    }
+
+    if (!email || !password) {
+      alert("Completá todos los campos")
+      return
+    }
+
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password
+    })
+
+    if (error) return alert(error.message)
+    if (!data.user) return alert("Error al crear usuario")
+
+    await supabase.from("usuarios_admin").insert({
+      id: data.user.id,
+      email,
+      rol
+    })
+
+    alert("Usuario creado")
+    setEmail("")
+    setPassword("")
+  }
+
   return (
-    <div style={{ display: "flex" }}>
+    <div className="admin-container">
+      <h1 className="admin-title">Panel Admin</h1>
 
-      {/* 🔥 SIDEBAR */}
-      <aside className="sidebar">
+      <div style={{ textAlign: "center", marginBottom: "20px" }}>
+        <span>
+          {user?.email} ({userRole})
+        </span>
 
-        <h2 className="sidebar-title">Admin</h2>
-
-        <p className="user-email">{userEmail}</p>
-
-        <div className="sidebar-item active">Crear</div>
-
-        <div
-          className="sidebar-item"
-          onClick={() => router.push("/admin/predicas")}
+        <button
+          className="btn-base btn-outline"
+          style={{ marginLeft: "10px" }}
+          onClick={logout}
         >
-          Predicas
-        </div>
+          Logout
+        </button>
+      </div>
 
-        <div
-          className="sidebar-item"
-          onClick={() => router.push("/admin/alabanzas")}
+      <div className="admin-section">
+        <button>Crear usuario</button>
+        <button>Predicas</button>
+        <button>Alabanzas</button>
+        <button>Perfil</button>
+      </div>
+
+      <div className="admin-card">
+        <h3>Crear Usuario</h3>
+
+        <input
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+
+        <select
+          value={rol}
+          onChange={(e) => setRol(e.target.value as Rol)}
         >
-          Alabanzas
-        </div>
+          <option value="editor">Editor</option>
+          <option value="admin">Admin</option>
+        </select>
 
-        <div
-          className="sidebar-item"
-          onClick={handleLogout}
-        >
-          Cerrar sesión
-        </div>
-
-      </aside>
-
-      {/* 🔥 CONTENIDO */}
-      <main style={{ marginLeft: 240, width: "100%" }}>
-
-        <div className="admin-container">
-
-          <h1 className="admin-title">⚡ Panel de Control</h1>
-
-          <div className="admin-section">
-            <button onClick={() => setTipo("predica")}>Predicas</button>
-            <button onClick={() => setTipo("alabanza")}>Alabanzas</button>
-          </div>
-
-          {tipo && (
-            <div className="admin-card">
-
-              <h3>Subir {tipo}</h3>
-
-              <div className="admin-toggle">
-
-                <button
-                  type="button"
-                  className={`toggle-btn audio ${modo === "audio" ? "active" : ""}`}
-                  onClick={() => setModo("audio")}
-                >
-                  Audio
-                </button>
-
-                <button
-                  type="button"
-                  className={`toggle-btn youtube ${modo === "youtube" ? "active" : ""}`}
-                  onClick={() => setModo("youtube")}
-                >
-                  YouTube
-                </button>
-
-              </div>
-
-              {/* FORM */}
-              <label>Título</label>
-              <input
-                placeholder="Ej: Estudio de Romanos"
-                value={titulo}
-                onChange={e => setTitulo(e.target.value)}
-              />
-
-              <label>{tipo === "predica" ? "Predicador" : "Autor"}</label>
-              <input
-                placeholder="Ej: Hno Juan Lopez"
-                value={autor}
-                onChange={e => setAutor(e.target.value)}
-              />
-
-              <label>Descripción</label>
-              <textarea
-                placeholder="Ej: Capitulo 1: 1-10"
-                value={descripcion}
-                onChange={e => setDescripcion(e.target.value)}
-              />
-
-              <label>Fecha</label>
-              <input
-                type="date"
-                value={fecha}
-                onChange={e => setFecha(e.target.value)}
-                className="date-input"
-              />
-
-              {modo === "audio" && (
-                <>
-                  <label>Seleccionar archivo</label>
-                  <input
-                    type="file"
-                    accept="audio/*"
-                    onChange={e => setFile(e.target.files?.[0] || null)}
-                  />
-                </>
-              )}
-
-              {modo === "youtube" && (
-                <>
-                  <label>URL YouTube</label>
-                  <input
-                    placeholder="https://youtube.com/..."
-                    value={youtubeUrl}
-                    onChange={e => setYoutubeUrl(e.target.value)}
-                  />
-                </>
-              )}
-
-              <button
-                className="admin-submit-btn"
-                onClick={handleUpload}
-                disabled={!isFormValid || loading}
-              >
-                {loading ? "Subiendo..." : "Subir"}
-              </button>
-
-            </div>
-          )}
-
-        </div>
-
-      </main>
-
+        <button className="admin-submit-btn" onClick={crearUsuario}>
+          Crear usuario
+        </button>
+      </div>
     </div>
   )
 }

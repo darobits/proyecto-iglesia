@@ -1,94 +1,46 @@
-
-
-
-"use client"
+'use client'
 
 import { useState } from "react"
+import { supabase } from "@/lib/supabase"
 import { useRouter } from "next/navigation"
-import { supabase } from "@/lib/supabaseClient"
+import type { FormEvent } from "react"
 
 export default function LoginPage() {
+  const [email, setEmail] = useState<string>("")
+  const [password, setPassword] = useState<string>("")
+  const [loading, setLoading] = useState<boolean>(false)
 
   const router = useRouter()
 
-  const [dni, setDni] = useState("")
-  const [password, setPassword] = useState("")
-  const [loading, setLoading] = useState(false)
-
-  const handleLogin = async (e: React.FormEvent) => {
+  async function handleLogin(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
-
-    if (!dni || !password) {
-      return alert("Completá todos los campos")
-    }
-
     setLoading(true)
 
-    try {
-      // 🔑 EMAIL GENERADO DESDE DNI
-      const email = `${dni}@admin.com`
-
-      // 🔐 LOGIN SUPABASE
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      })
-
-      if (error || !data.user) {
-        setLoading(false)
-        return alert("Credenciales incorrectas")
-      }
-
-      const userId = data.user.id
-
-      // 🔍 BUSCAR USUARIO EN TABLA ADMIN
-      const { data: adminData, error: adminError } = await supabase
-        .from("usuarios_admin")
-        .select("*")
-        .eq("id", userId)
-        .single()
-
-      if (adminError || !adminData) {
-        await supabase.auth.signOut()
-        setLoading(false)
-        return alert("No tenés permisos de administrador")
-      }
-
-      if (adminData.rol !== "admin") {
-        await supabase.auth.signOut()
-        setLoading(false)
-        return alert("Acceso denegado")
-      }
-
-      // ✅ LOGIN OK
-      router.push("/admin")
-
-    } catch (err) {
-      console.error(err)
-      alert("Error inesperado")
-    }
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    })
 
     setLoading(false)
+
+    if (error) {
+      alert(error.message)
+      return
+    }
+
+    router.push("/admin")
   }
 
   return (
     <div className="login-container">
       <form className="login-card" onSubmit={handleLogin}>
-
-         {/* 🔥 LOGO */}
-        <img
-          src="/images/logo_iglesia.png"
-          alt="Logo Iglesia"
-          className="login-logo"
-        />
-
         <h2>Iniciar sesión</h2>
 
         <input
-          type="text"
-          placeholder="DNI"
-          value={dni}
-          onChange={(e) => setDni(e.target.value)}
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
 
         <input
@@ -101,7 +53,6 @@ export default function LoginPage() {
         <button type="submit" disabled={loading}>
           {loading ? "Ingresando..." : "Ingresar"}
         </button>
-
       </form>
     </div>
   )
