@@ -4,11 +4,12 @@ import { useState } from "react"
 import { supabase } from "@/lib/supabase"
 import { useRouter } from "next/navigation"
 import type { FormEvent } from "react"
+import Image from "next/image"
 
 export default function LoginPage() {
-  const [email, setEmail] = useState<string>("")
-  const [password, setPassword] = useState<string>("")
-  const [loading, setLoading] = useState<boolean>(false)
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [loading, setLoading] = useState(false)
 
   const router = useRouter()
 
@@ -33,26 +34,44 @@ export default function LoginPage() {
 
   return (
     <div className="login-container">
+
       <form className="login-card" onSubmit={handleLogin}>
+
+        {/* 🔥 LOGO */}
+        <div className="login-logo">
+          <Image
+            src="/images/logo_iglesia.png"
+            alt="Logo Iglesia"
+            width={200}
+            height={200}
+            priority
+          />
+        </div>
+
         <h2>Iniciar sesión</h2>
 
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+        <div className="login-field">
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
 
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <div className="login-field">
+          <input
+            type="password"
+            placeholder="Contraseña"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
 
         <button type="submit" disabled={loading}>
           {loading ? "Ingresando..." : "Ingresar"}
         </button>
+
       </form>
     </div>
   )

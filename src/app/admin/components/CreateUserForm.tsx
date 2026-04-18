@@ -28,11 +28,11 @@ export default function CreateUserForm({
     (userToEdit?.permisos as Permiso[]) ?? []
   )
 
-  const { permisos: userPermisosRaw } = useAuth()
+  // 🔥 SIN TOCAR useAuth → casteo controlado
+  const { permisos: permisosRaw } = useAuth()
+  const permisosUsuario = permisosRaw as Permiso[]
 
-  const userPermisos = userPermisosRaw as Permiso[]
-
-  const { canGestionarUsuarios } = usePermissions(userPermisos)
+  const { canGestionarUsuarios } = usePermissions(permisosUsuario)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -47,6 +47,7 @@ export default function CreateUserForm({
       return
     }
 
+    // ✏️ EDITAR
     if (userToEdit) {
       const { error } = await supabase
         .from("usuarios_admin")
@@ -56,7 +57,10 @@ export default function CreateUserForm({
       if (error) return alert(error.message)
 
       alert("Usuario actualizado")
-    } else {
+    }
+
+    // ➕ CREAR
+    else {
       if (!password) return alert("Password obligatorio")
 
       const { data, error } = await supabase.auth.signUp({
@@ -88,17 +92,32 @@ export default function CreateUserForm({
   }
 
   return (
-    <div className="card">
+    <div className="card user-card">
+
       <h3>{userToEdit ? "Editar usuario" : "Crear usuario"}</h3>
 
       <form onSubmit={handleSubmit} className="form">
 
         <div className="form-grid">
-          <input value={nombre} onChange={e => setNombre(e.target.value)} placeholder="Nombre" />
-          <input value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" />
+          <input
+            value={nombre}
+            onChange={e => setNombre(e.target.value)}
+            placeholder="Nombre"
+          />
+
+          <input
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            placeholder="Email"
+          />
 
           {!userToEdit && (
-            <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" />
+            <input
+              type="password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              placeholder="Password"
+            />
           )}
         </div>
 
@@ -115,7 +134,11 @@ export default function CreateUserForm({
           </button>
 
           {userToEdit && (
-            <button type="button" onClick={onCancelEdit} className="btn btn-delete">
+            <button
+              type="button"
+              onClick={onCancelEdit}
+              className="btn btn-delete"
+            >
               Cancelar
             </button>
           )}

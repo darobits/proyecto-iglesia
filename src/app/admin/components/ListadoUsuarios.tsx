@@ -16,7 +16,7 @@ export default function ListadoUsuarios() {
   const [userToEdit, setUserToEdit] = useState<UsuarioAdmin | null>(null)
   const [userToDelete, setUserToDelete] = useState<UsuarioAdmin | null>(null)
 
-  // 🔥 FIX CORRECTO (sin tocar useAuth)
+  // 🔥 FIX REAL: casteo controlado
   const { permisos: permisosRaw } = useAuth()
   const permisos = permisosRaw as Permiso[]
 
@@ -54,7 +54,7 @@ export default function ListadoUsuarios() {
   }
 
   return (
-    <div className="card">
+    <div className="card user-card">
 
       <CreateUserForm
         userToEdit={userToEdit}
@@ -81,16 +81,23 @@ export default function ListadoUsuarios() {
         <tbody>
           {usuarios.map(u => (
             <tr key={u.id}>
+
               <td>{u.nombre}</td>
+
               <td>{u.email}</td>
+
               <td>
                 <span className="badge">{u.rol}</span>
               </td>
+
               <td>
                 {(u.permisos || []).map(p => (
-                  <span key={p} className="badge">{p}</span>
+                  <span key={p} className="badge">
+                    {p}
+                  </span>
                 ))}
               </td>
+
               <td>
 
                 {canEditar && (
@@ -116,6 +123,7 @@ export default function ListadoUsuarios() {
                 )}
 
               </td>
+
             </tr>
           ))}
         </tbody>

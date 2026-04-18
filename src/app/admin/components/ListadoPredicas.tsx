@@ -21,13 +21,10 @@ export default function ListadoPredicas() {
       const { data, error } = await supabase
         .from("predicas")
         .select("*")
+        .order("fecha", { ascending: false })
 
       if (ignore) return
-
-      if (error) {
-        console.error(error.message)
-        return
-      }
+      if (error) return console.error(error.message)
 
       setPredicas(data || [])
     }
@@ -40,14 +37,36 @@ export default function ListadoPredicas() {
   }, [])
 
   return (
-    <div className="card">
-      <h2>Prédicas</h2>
+    <div className="card predica-card">
 
-      {predicas.map((p) => (
-        <div key={p.id}>
-          {p.titulo} - {p.predicador}
-        </div>
-      ))}
+      <h3>Prédicas</h3>
+
+      <div className="predicas-grid">
+
+        {predicas.map((p) => (
+          <div key={p.id} className="predica-item">
+
+            <h4>{p.titulo}</h4>
+
+            <p className="predicador">
+              {p.predicador}
+            </p>
+
+            <span className="badge">
+              {new Date(p.fecha).toLocaleDateString()}
+            </span>
+
+            {p.audio_url && (
+              <audio controls className="audio-player">
+                <source src={p.audio_url} />
+              </audio>
+            )}
+
+          </div>
+        ))}
+
+      </div>
+
     </div>
   )
 }

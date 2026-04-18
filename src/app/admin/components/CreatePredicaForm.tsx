@@ -3,12 +3,19 @@
 import { useState } from "react"
 import { supabase } from "@/lib/supabase"
 
+type Tipo = "audio" | "youtube"
+
 export default function CreatePredicaForm() {
+
+  const [tipo, setTipo] = useState<Tipo>("audio")
+
   const [titulo, setTitulo] = useState("")
   const [predicador, setPredicador] = useState("")
   const [descripcion, setDescripcion] = useState("")
   const [fecha, setFecha] = useState("")
+
   const [audio, setAudio] = useState<File | null>(null)
+  const [youtubeUrl, setYoutubeUrl] = useState("")
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -19,8 +26,9 @@ export default function CreatePredicaForm() {
     }
 
     let audio_url = null
+    let youtube_url = null
 
-    if (audio) {
+    if (tipo === "audio" && audio) {
       const fileName = `${Date.now()}-${audio.name}`
 
       const { error } = await supabase.storage
@@ -36,6 +44,11 @@ export default function CreatePredicaForm() {
       audio_url = data.publicUrl
     }
 
+    if (tipo === "youtube") {
+      if (!youtubeUrl) return alert("Ingresar URL de YouTube")
+      youtube_url = youtubeUrl
+    }
+
     const { error } = await supabase
       .from("predicas")
       .insert({
@@ -43,28 +56,71 @@ export default function CreatePredicaForm() {
         predicador,
         descripcion,
         fecha,
-        audio_url
+        audio_url,
+        youtube_url
       })
 
     if (error) return alert(error.message)
 
-    alert("Predica creada")
+    alert("Prédica creada")
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Crear Prédica</h2>
+    <div className="card predica-card form-card dark-card">
 
-      <input placeholder="Título" onChange={(e) => setTitulo(e.target.value)} />
-      <input placeholder="Predicador" onChange={(e) => setPredicador(e.target.value)} />
+      <h3>Crear Prédica</h3>
 
-      <textarea placeholder="Descripción" onChange={(e) => setDescripcion(e.target.value)} />
+      <div className="tipo-selector">
 
-      <input type="date" onChange={(e) => setFecha(e.target.value)} />
+        <button
+          type="button"
+          className={`btn-tipo ${tipo === "audio" ? "active-audio" : ""}`}
+          onClick={() => setTipo("audio")}
+        >
+          🎧 Audio
+        </button>
 
-      <input type="file" accept="audio/mp3" onChange={(e) => setAudio(e.target.files?.[0] || null)} />
+        <button
+          type="button"
+          className={`btn-tipo ${tipo === "youtube" ? "active-youtube" : ""}`}
+          onClick={() => setTipo("youtube")}
+        >
+          ▶️ YouTube
+        </button>
 
-      <button type="submit">Crear</button>
-    </form>
+      </div>
+
+      <form onSubmit={handleSubmit} className="form">
+
+        <div className="form-grid">
+          <input value={titulo} onChange={e => setTitulo(e.target.value)} placeholder="Título" />
+          <input value={predicador} onChange={e => setPredicador(e.target.value)} placeholder="Predicador" />
+        </div>
+
+        <textarea value={descripcion} onChange={e => setDescripcion(e.target.value)} placeholder="Descripción" />
+
+        <div className="form-grid">
+
+          <input type="date" value={fecha} onChange={e => setFecha(e.target.value)} />
+
+          {tipo === "audio" ? (
+            <input type="file" accept="audio/mp3" onChange={(e) => setAudio(e.target.files?.[0] || null)} />
+          ) : (
+            <input
+              type="text"
+              placeholder="URL de YouTube"
+              value={youtubeUrl}
+              onChange={(e) => setYoutubeUrl(e.target.value)}
+            />
+          )}
+
+        </div>
+
+        <button className="btn-go" type="submit">
+          Crear Prédica
+        </button>
+
+      </form>
+    </div>
   )
 }

@@ -1,4 +1,4 @@
-import './globals.css'
+import '../app/globals.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 import LayoutClient from "@/components/LayoutClient"
@@ -41,7 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" href="/images/logo_iglesia.png" />
-        <link rel="canonical" href="https://iglesiagraciagloria.org" />
+        <link rel="canonical" href="https://iglesiaevangelicagraciagloria.com.ar" />
       </head>
 
       <body>
