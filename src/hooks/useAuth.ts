@@ -18,6 +18,9 @@ type AuthState = {
   loading: boolean
 }
 
+// ⏱️ CONFIGURACIÓN
+const SESSION_TIMEOUT = 30 * 60 * 1000 // 30 minutos
+
 export function useAuth(): AuthState {
   const [user, setUser] = useState<User | null>(null)
   const [nombre, setNombre] = useState<string | null>(null)
@@ -27,6 +30,26 @@ export function useAuth(): AuthState {
 
   useEffect(() => {
     let isMounted = true
+
+    // 🟢 Guarda actividad
+    function resetTimer() {
+      localStorage.setItem("last_activity", Date.now().toString())
+    }
+
+    // 🔴 Verifica expiración
+    async function checkSession() {
+      const last = localStorage.getItem("last_activity")
+
+      if (!last) return
+
+      const diff = Date.now() - parseInt(last)
+
+      if (diff > SESSION_TIMEOUT) {
+        await supabase.auth.signOut()
+        localStorage.removeItem("last_activity")
+        window.location.href = "/login"
+      }
+    }
 
     async function load() {
       try {
@@ -63,6 +86,9 @@ export function useAuth(): AuthState {
         setPermisos(data?.permisos ?? [])
         setLoading(false)
 
+        // 🔥 INICIALIZA actividad al cargar usuario
+        resetTimer()
+
       } catch (err) {
         console.error("Error inesperado:", err)
 
@@ -78,13 +104,30 @@ export function useAuth(): AuthState {
 
     load()
 
+    // 🔁 Listener auth
     const { data: listener } = supabase.auth.onAuthStateChange(() => {
       load()
     })
 
+    // 🖱️ Eventos de actividad
+    const events = ["click", "keydown", "mousemove"]
+
+    events.forEach((event) => {
+      window.addEventListener(event, resetTimer)
+    })
+
+    // ⏱️ Intervalo de chequeo
+    const interval = setInterval(checkSession, 60000)
+
     return () => {
       isMounted = false
       listener.subscription.unsubscribe()
+
+      events.forEach((event) => {
+        window.removeEventListener(event, resetTimer)
+      })
+
+      clearInterval(interval)
     }
 
   }, [])

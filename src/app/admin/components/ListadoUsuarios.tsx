@@ -1,94 +1,136 @@
 'use client'
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, startTransition } from "react"
 import { supabase } from "@/lib/supabase"
+import type { UsuarioAdmin } from "@/types/usuario"
+import CreateUserForm from "./CreateUserForm"
+import ModalConfirm from "./ModalConfirm"
 
-type Usuario = {
-  id: string
-  email: string
-  rol: string
-  permisos: string[]
-}
+import { useAuth } from "@/hooks/useAuth"
+import { usePermissions } from "@/hooks/usePermissions"
+import type { Permiso } from "@/lib/permissions"
 
-export default function ListadoUsuarios({ tabla = "usuarios_admin" }: { tabla?: string }) {
-  const [usuarios, setUsuarios] = useState<Usuario[]>([])
+export default function ListadoUsuarios() {
 
-  // 🔹 FETCH
+  const [usuarios, setUsuarios] = useState<UsuarioAdmin[]>([])
+  const [userToEdit, setUserToEdit] = useState<UsuarioAdmin | null>(null)
+  const [userToDelete, setUserToDelete] = useState<UsuarioAdmin | null>(null)
+
+  // 🔥 FIX CORRECTO (sin tocar useAuth)
+  const { permisos: permisosRaw } = useAuth()
+  const permisos = permisosRaw as Permiso[]
+
+  const { canEditar, canEliminar } = usePermissions(permisos)
+
   async function fetchUsuarios() {
-    const { data, error } = await supabase
-  .from(tabla)
-  .select("*")
-
-    if (error) {
-      console.error(error.message)
-      return
-    }
-
-    setUsuarios(data || [])
-  }
-
-  // 🔹 DELETE
-  async function eliminarUsuario(id: string) {
-    const confirm = window.confirm("¿Eliminar usuario?")
-    if (!confirm) return
-
-    const { error } = await supabase
+    const { data } = await supabase
       .from("usuarios_admin")
-      .delete()
-      .eq("id", id)
+      .select("*")
 
-    if (error) {
-      alert(error.message)
-      return
-    }
-
-    // 🔥 IMPORTANTE: recargar lista correctamente
-    await fetchUsuarios()
+    startTransition(() => {
+      setUsuarios(data || [])
+    })
   }
 
-  // 🔹 EFFECT LIMPIO
   useEffect(() => {
-    let mounted = true
-
-    async function load() {
-      if (!mounted) return
-      await fetchUsuarios()
-    }
-
-    load()
-
-    return () => {
-      mounted = false
-    }
+    fetchUsuarios()
   }, [])
 
-  return (
-    <div>
-      <h2>Listado de usuarios</h2>
+  async function eliminarUsuario() {
+    if (!canEliminar) {
+      alert("No tenés permisos")
+      return
+    }
 
-      <table style={{ width: "100%", marginTop: 20 }}>
+    if (!userToDelete) return
+
+    await supabase
+      .from("usuarios_admin")
+      .delete()
+      .eq("id", userToDelete.id)
+
+    setUserToDelete(null)
+    fetchUsuarios()
+  }
+
+  return (
+    <div className="card">
+
+      <CreateUserForm
+        userToEdit={userToEdit}
+        onSuccess={() => {
+          setUserToEdit(null)
+          fetchUsuarios()
+        }}
+        onCancelEdit={() => setUserToEdit(null)}
+      />
+
+      <h3 style={{ marginTop: 30 }}>Listado de usuarios</h3>
+
+      <table className="table">
         <thead>
           <tr>
-            <th style={{ padding: 10 }}>Email</th>
-            <th style={{ padding: 10 }}>Rol</th>
-            <th style={{ padding: 10 }}>Acciones</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Permisos</th>
+            <th>Acciones</th>
           </tr>
         </thead>
 
         <tbody>
-          {usuarios.map((u) => (
+          {usuarios.map(u => (
             <tr key={u.id}>
-              <td style={{ padding: 10 }}>{u.email}</td>
-              <td style={{ padding: 10 }}>{u.rol}</td>
-              <td style={{ padding: 10 }}>
-                <button onClick={() => eliminarUsuario(u.id)}>
-                  Eliminar
-                </button>
+              <td>{u.nombre}</td>
+              <td>{u.email}</td>
+              <td>
+                <span className="badge">{u.rol}</span>
+              </td>
+              <td>
+                {(u.permisos || []).map(p => (
+                  <span key={p} className="badge">{p}</span>
+                ))}
+              </td>
+              <td>
+
+                {canEditar && (
+                  <button
+                    className="btn btn-edit"
+                    onClick={() => setUserToEdit(u)}
+                  >
+                    Editar
+                  </button>
+                )}
+
+                {canEliminar && (
+                  <button
+                    className="btn btn-delete"
+                    onClick={() => setUserToDelete(u)}
+                  >
+                    Eliminar
+                  </button>
+                )}
+
+                {!canEditar && !canEliminar && (
+                  <span className="no-perm">Sin permisos</span>
+                )}
+
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      <ModalConfirm
+        open={!!userToDelete}
+        title="Eliminar usuario"
+        description="¿Estás seguro?"
+        confirmText="Eliminar"
+        cancelText="No"
+        onConfirm={eliminarUsuario}
+        onCancel={() => setUserToDelete(null)}
+      />
+
     </div>
   )
 }

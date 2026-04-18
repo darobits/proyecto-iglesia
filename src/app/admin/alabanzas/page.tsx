@@ -1,5 +1,11 @@
-import ListadoUsuarios from "@/app/admin/components/ListadoUsuarios"
+import CreateAlabanzaForm from "../components/CreateAlabanzaForm"
+import ListadoAlabanzas from "../components/ListadoAlabanzas"
 
 export default function AlabanzasPage() {
-  return <ListadoUsuarios tabla="alabanzas" />
+  return (
+    <div>
+      <CreateAlabanzaForm />
+      <ListadoAlabanzas />
+    </div>
+  )
 }

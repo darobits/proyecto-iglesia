@@ -11,7 +11,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
       <Sidebar collapsed={collapsed} />
 
-      {/* BOTÓN */}
       <button
         className={`toggle-btn ${collapsed ? "collapsed" : ""}`}
         onClick={() => setCollapsed(!collapsed)}
@@ -19,7 +18,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         {collapsed ? "➡️" : "⬅️"}
       </button>
 
-      {/* CONTENIDO */}
       <div className={`admin-content ${collapsed ? "collapsed" : ""}`}>
         {children}
       </div>

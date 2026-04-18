@@ -1,5 +1,11 @@
-import ListadoUsuarios from "@/app/admin/components/ListadoUsuarios"
+import CreatePredicaForm from "../components/CreatePredicaForm"
+import ListadoPredicas from "../components/ListadoPredicas"
 
 export default function PredicasPage() {
-  return <ListadoUsuarios tabla="predicas" />
+  return (
+    <div>
+      <CreatePredicaForm />
+      <ListadoPredicas />
+    </div>
+  )
 }

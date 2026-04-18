@@ -1,20 +1,22 @@
 'use client'
 
-import CreateUserForm from "../components/CreateUserForm"
+import { useAuth } from "@/hooks/useAuth"
+import { useRouter } from "next/navigation"
+import { useEffect } from "react"
+import { PERMISOS } from "@/lib/permissions"
 import ListadoUsuarios from "../components/ListadoUsuarios"
 
 export default function UsuariosPage() {
-  return (
-    <div>
-      <h1 style={{ marginBottom: 20 }}>Usuarios</h1>
+  const { permisos, loading } = useAuth()
+  const router = useRouter()
 
-      <div className="card">
-        <CreateUserForm />
-      </div>
+  useEffect(() => {
+    if (!loading && !permisos.includes(PERMISOS.GESTIONAR_USUARIOS)) {
+      router.push("/admin")
+    }
+  }, [permisos, loading, router])
 
-      <div style={{ marginTop: 30 }} className="card">
-        <ListadoUsuarios />
-      </div>
-    </div>
-  )
+  if (loading) return <p style={{ color: "white" }}>Cargando...</p>
+
+  return <ListadoUsuarios />
 }
