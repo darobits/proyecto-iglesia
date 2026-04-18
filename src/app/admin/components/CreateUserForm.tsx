@@ -28,7 +28,6 @@ export default function CreateUserForm({
     (userToEdit?.permisos as Permiso[]) ?? []
   )
 
-  // 🔥 SIN TOCAR useAuth → casteo controlado
   const { permisos: permisosRaw } = useAuth()
   const permisosUsuario = permisosRaw as Permiso[]
 
@@ -47,7 +46,6 @@ export default function CreateUserForm({
       return
     }
 
-    // ✏️ EDITAR
     if (userToEdit) {
       const { error } = await supabase
         .from("usuarios_admin")
@@ -57,10 +55,7 @@ export default function CreateUserForm({
       if (error) return alert(error.message)
 
       alert("Usuario actualizado")
-    }
-
-    // ➕ CREAR
-    else {
+    } else {
       if (!password) return alert("Password obligatorio")
 
       const { data, error } = await supabase.auth.signUp({
@@ -92,9 +87,10 @@ export default function CreateUserForm({
   }
 
   return (
-    <div className="card user-card">
-
-      <h3>{userToEdit ? "Editar usuario" : "Crear usuario"}</h3>
+    <>
+      <h3 className="usuarios-title">
+        {userToEdit ? "Editar usuario" : "Crear usuario"}
+      </h3>
 
       <form onSubmit={handleSubmit} className="form">
 
@@ -145,6 +141,6 @@ export default function CreateUserForm({
         </div>
 
       </form>
-    </div>
+    </>
   )
 }

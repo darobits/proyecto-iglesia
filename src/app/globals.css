@@ -1748,6 +1748,7 @@ textarea {
   width: 100%;
   filter: brightness(1.2) contrast(1.1);
 }
+
 /* ===== BADGE ===== */
 .badge {
   display: inline-block;
@@ -1805,4 +1806,232 @@ select {
 
 input[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(1);
+}
+
+/** ARREGLO QUE SOLUCIONA ESTILOS QUE SE PISAN/
+
+/* =========================
+   USERS - VERSION PRO
+========================= */
+
+.usuarios-page {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* ===== CREATE CARD ===== */
+
+.user-create {
+  background: linear-gradient(
+    135deg,
+    rgba(16, 185, 129, 0.15),
+    rgba(59, 130, 246, 0.15)
+  ) !important;
+
+  border: 1px solid rgba(16,185,129,0.3);
+}
+
+/* ===== LIST CARD ===== */
+
+.user-list {
+  background: linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 0.85),
+    rgba(2, 44, 34, 0.75)
+  ) !important;
+
+  border: 1px solid rgba(59,130,246,0.25);
+}
+
+/* ===== TITLE ===== */
+
+.usuarios-title {
+  margin-bottom: 15px;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+/* ===== TABLE PRO ===== */
+
+.usuarios-table {
+  background: rgba(0,0,0,0.2);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.usuarios-table th {
+  background: rgba(255,255,255,0.05);
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.usuarios-table td {
+  color: #992eb9;
+}
+
+.usuarios-table tr {
+  transition: 0.2s;
+}
+
+.usuarios-table tr:hover {
+  background: rgba(39, 64, 103, 0.1);
+}
+
+/* ===== BADGES MEJORADOS ===== */
+
+.badge {
+  background: rgba(59,130,246,0.25);
+  color: #93c5fd;
+
+  font-weight: 500;
+}
+
+/* ===== PERMISOS MÁS PRO ===== */
+
+.perm-item {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+/* ===== INPUTS MENOS OPACOS ===== */
+
+.user-card .form input {
+  background: rgba(4, 15, 96, 0.73) !important;
+}
+
+.user-card .form input:focus {
+  background: rgba(93, 95, 94, 0.936) !important;
+}
+
+/* ===== BOTÓN CREATE MÁS PRO ===== */
+
+.user-card .btn-edit {
+  background: linear-gradient(135deg, #c88265, #facc15);
+  color: black;
+}
+
+/* ===== BOTÓN DELETE ===== */
+
+.user-card .btn-delete {
+  background: linear-gradient(135deg, #e04848, #b91c1c);
+}
+
+/* =========================
+   USERS - VISUAL PRO FINAL
+========================= */
+
+.user-create,
+.user-list {
+  border-radius: 50px;
+  padding: 25px;
+
+  /* 🔥 mismo fondo para ambos */
+  background: linear-gradient(
+    135deg,
+    rgba(12, 43, 114, 0.75),
+    rgba(15, 125, 97, 0.941)
+  ) !important;
+
+  backdrop-filter: blur(12px);
+
+  border: 1px solid rgba(59,130,246,0.25);
+
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+}
+
+/* ===== TITULOS ===== */
+
+.usuarios-title,
+.user-create h3,
+.user-list h3 {
+  color: #f1f5f9; /* blanco suave */
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+/* ===== FORM INPUTS ===== */
+
+.user-create input,
+.user-create textarea {
+  background: rgba(52, 169, 142, 0.945) !important;
+  color: #e5e7eb !important;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.user-create input::placeholder,
+.user-create textarea::placeholder {
+  color: #94a3b8;
+}
+
+/* ===== PERMISOS ===== */
+
+.perm-item {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  color: #d2d7e1;
+}
+
+/* ===== TABLA ===== */
+
+.usuarios-table {
+  background: transparent;
+}
+
+.usuarios-table thead {
+  background: rgba(255,255,255,0.05);
+}
+
+.usuarios-table th {
+  color: #0f4b9e;
+}
+
+.usuarios-table td {
+  color: #e5e7eb;
+}
+
+/* 🔥 SACAMOS EL FONDO BLANCO */
+.usuarios-table tr {
+  background: transparent;
+}
+
+.usuarios-table tr:hover {
+  background: rgba(199, 246, 59, 0.12);
+}
+
+/* ===== BADGES ===== */
+
+.badge {
+  background: rgba(12, 89, 212, 0.774);
+  color: #93c5fd;
+}
+
+/* ===== BOTONES ===== */
+
+.btn-edit {
+  background: linear-gradient(135deg, #facc15, #9d7705);
+  color: black;
+}
+
+.btn-delete {
+  background: linear-gradient(135deg, #7f0303, #b91c1c);
+  color: white;
+}
+
+/* ===== BOTON CREATE ===== */
+
+.user-create .btn-edit {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+}
+
+/* ===== SOMBRA SUAVE ENTRE BLOQUES ===== */
+
+.user-create {
+  margin-bottom: 10px;
+}
+
+.user-list {
+  margin-top: 10px;
 }

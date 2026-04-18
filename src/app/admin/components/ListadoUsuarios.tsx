@@ -16,7 +16,6 @@ export default function ListadoUsuarios() {
   const [userToEdit, setUserToEdit] = useState<UsuarioAdmin | null>(null)
   const [userToDelete, setUserToDelete] = useState<UsuarioAdmin | null>(null)
 
-  // 🔥 FIX REAL: casteo controlado
   const { permisos: permisosRaw } = useAuth()
   const permisos = permisosRaw as Permiso[]
 
@@ -54,80 +53,88 @@ export default function ListadoUsuarios() {
   }
 
   return (
-    <div className="card user-card">
+    <div className="usuarios-page">
 
-      <CreateUserForm
-        userToEdit={userToEdit}
-        onSuccess={() => {
-          setUserToEdit(null)
-          fetchUsuarios()
-        }}
-        onCancelEdit={() => setUserToEdit(null)}
-      />
+      {/* 🔥 CREATE */}
+      <div className="card user-card user-create">
+        <CreateUserForm
+          userToEdit={userToEdit}
+          onSuccess={() => {
+            setUserToEdit(null)
+            fetchUsuarios()
+          }}
+          onCancelEdit={() => setUserToEdit(null)}
+        />
+      </div>
 
-      <h3 style={{ marginTop: 30 }}>Listado de usuarios</h3>
+      {/* 🔥 LISTADO */}
+      <div className="card user-card user-list">
 
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Email</th>
-            <th>Rol</th>
-            <th>Permisos</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
+        <h3 className="usuarios-title">Listado de usuarios</h3>
 
-        <tbody>
-          {usuarios.map(u => (
-            <tr key={u.id}>
-
-              <td>{u.nombre}</td>
-
-              <td>{u.email}</td>
-
-              <td>
-                <span className="badge">{u.rol}</span>
-              </td>
-
-              <td>
-                {(u.permisos || []).map(p => (
-                  <span key={p} className="badge">
-                    {p}
-                  </span>
-                ))}
-              </td>
-
-              <td>
-
-                {canEditar && (
-                  <button
-                    className="btn btn-edit"
-                    onClick={() => setUserToEdit(u)}
-                  >
-                    Editar
-                  </button>
-                )}
-
-                {canEliminar && (
-                  <button
-                    className="btn btn-delete"
-                    onClick={() => setUserToDelete(u)}
-                  >
-                    Eliminar
-                  </button>
-                )}
-
-                {!canEditar && !canEliminar && (
-                  <span className="no-perm">Sin permisos</span>
-                )}
-
-              </td>
-
+        <table className="table usuarios-table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Rol</th>
+              <th>Permisos</th>
+              <th>Acciones</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+
+          <tbody>
+            {usuarios.map(u => (
+              <tr key={u.id}>
+
+                <td>{u.nombre}</td>
+
+                <td>{u.email}</td>
+
+                <td>
+                  <span className="badge">{u.rol}</span>
+                </td>
+
+                <td>
+                  {(u.permisos || []).map(p => (
+                    <span key={p} className="badge">
+                      {p}
+                    </span>
+                  ))}
+                </td>
+
+                <td>
+
+                  {canEditar && (
+                    <button
+                      className="btn btn-edit"
+                      onClick={() => setUserToEdit(u)}
+                    >
+                      Editar
+                    </button>
+                  )}
+
+                  {canEliminar && (
+                    <button
+                      className="btn btn-delete"
+                      onClick={() => setUserToDelete(u)}
+                    >
+                      Eliminar
+                    </button>
+                  )}
+
+                  {!canEditar && !canEliminar && (
+                    <span className="no-perm">Sin permisos</span>
+                  )}
+
+                </td>
+
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+      </div>
 
       <ModalConfirm
         open={!!userToDelete}
