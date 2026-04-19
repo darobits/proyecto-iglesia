@@ -66,53 +66,103 @@ export default function CreatePredicaForm() {
   }
 
   return (
-    <div className="card predica-card form-card dark-card">
+    <div className="predica-create">
 
-      <h3>Crear Prédica</h3>
+      <h3 className="predica-title">Crear Prédica</h3>
 
-      <div className="tipo-selector">
+      {/* 🔥 SELECTOR */}
+      <div className="field">
+  <label>Elegí el tipo de archivo:</label>
 
-        <button
-          type="button"
-          className={`btn-tipo ${tipo === "audio" ? "active-audio" : ""}`}
-          onClick={() => setTipo("audio")}
-        >
-          🎧 Audio
-        </button>
+  <div className="tipo-selector">
 
-        <button
-          type="button"
-          className={`btn-tipo ${tipo === "youtube" ? "active-youtube" : ""}`}
-          onClick={() => setTipo("youtube")}
-        >
-          ▶️ YouTube
-        </button>
+    <button
+      type="button"
+      className={`btn-tipo ${tipo === "audio" ? "active-audio" : ""}`}
+      onClick={() => setTipo("audio")}
+    >
+      🎧 Audio
+    </button>
 
-      </div>
+    <button
+      type="button"
+      className={`btn-tipo ${tipo === "youtube" ? "active-youtube" : ""}`}
+      onClick={() => setTipo("youtube")}
+    >
+      ▶️ YouTube
+    </button>
+
+  </div>
+</div>
 
       <form onSubmit={handleSubmit} className="form">
 
+        {/* 🔹 TITULO + PREDICADOR */}
         <div className="form-grid">
-          <input value={titulo} onChange={e => setTitulo(e.target.value)} placeholder="Título" />
-          <input value={predicador} onChange={e => setPredicador(e.target.value)} placeholder="Predicador" />
+
+          <div className="field">
+            <label>Título</label>
+            <input
+              value={titulo}
+              onChange={e => setTitulo(e.target.value)}
+              placeholder="Ej: Estudio de Romanos"
+            />
+          </div>
+
+          <div className="field">
+            <label>Predicador</label>
+            <input
+              value={predicador}
+              onChange={e => setPredicador(e.target.value)}
+              placeholder="Ej: Hno Darío Villar"
+            />
+          </div>
+
         </div>
 
-        <textarea value={descripcion} onChange={e => setDescripcion(e.target.value)} placeholder="Descripción" />
+        {/* 🔹 DESCRIPCION */}
+        <div className="field">
+          <label>Descripción</label>
+          <textarea
+            value={descripcion}
+            onChange={e => setDescripcion(e.target.value)}
+            placeholder="Ej: Capítulo 5: 1 - 5"
+          />
+        </div>
 
+        {/* 🔹 FECHA + CONTENIDO */}
         <div className="form-grid">
 
-          <input type="date" value={fecha} onChange={e => setFecha(e.target.value)} />
-
-          {tipo === "audio" ? (
-            <input type="file" accept="audio/mp3" onChange={(e) => setAudio(e.target.files?.[0] || null)} />
-          ) : (
+          <div className="field">
+            <label>Fecha (dia/mes/año) </label>
             <input
-              type="text"
-              placeholder="URL de YouTube"
-              value={youtubeUrl}
-              onChange={(e) => setYoutubeUrl(e.target.value)}
+              type="date"
+              value={fecha}
+              onChange={e => setFecha(e.target.value)}
             />
-          )}
+          </div>
+
+          <div className="field">
+            <label>
+              {tipo === "audio" ? "Cargar archivo MP3" : "Link de YouTube"}
+            </label>
+
+            {tipo === "audio" ? (
+              <input
+                type="file"
+                accept="audio/mp3"
+                onChange={(e) => setAudio(e.target.files?.[0] || null)}
+              />
+            ) : (
+              <input
+                type="text"
+                placeholder="https://youtube.com/..."
+                value={youtubeUrl}
+                onChange={(e) => setYoutubeUrl(e.target.value)}
+              />
+            )}
+
+          </div>
 
         </div>
 

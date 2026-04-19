@@ -1808,10 +1808,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(1);
 }
 
-/** ARREGLO QUE SOLUCIONA ESTILOS QUE SE PISAN/
+
+
+
+
+/*****************************************************************************************************************/
+/** ESTILO DE USUARIOS ADMIN FINAL QUE IMPORTA REALMENTE
+/*****************************************************************************************************************/
 
 /* =========================
-   USERS - VERSION PRO
+   LAYOUT
 ========================= */
 
 .usuarios-page {
@@ -1820,213 +1826,28 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   gap: 30px;
 }
 
-/* ===== CREATE CARD ===== */
-
-.user-create {
-  background: linear-gradient(
-    135deg,
-    rgba(16, 185, 129, 0.15),
-    rgba(59, 130, 246, 0.15)
-  ) !important;
-
-  border: 1px solid rgba(16,185,129,0.3);
-}
-
-/* ===== LIST CARD ===== */
-
-.user-list {
-  background: linear-gradient(
-    135deg,
-    rgba(15, 23, 42, 0.85),
-    rgba(2, 44, 34, 0.75)
-  ) !important;
-
-  border: 1px solid rgba(59,130,246,0.25);
-}
-
-/* ===== TITLE ===== */
-
-.usuarios-title {
-  margin-bottom: 15px;
-  font-size: 22px;
-  font-weight: 600;
-}
-
-/* ===== TABLE PRO ===== */
-
-.usuarios-table {
-  background: rgba(0,0,0,0.2);
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.usuarios-table th {
-  background: rgba(255,255,255,0.05);
-  color: #94a3b8;
-  font-size: 12px;
-}
-
-.usuarios-table td {
-  color: #992eb9;
-}
-
-.usuarios-table tr {
-  transition: 0.2s;
-}
-
-.usuarios-table tr:hover {
-  background: rgba(39, 64, 103, 0.1);
-}
-
-/* ===== BADGES MEJORADOS ===== */
-
-.badge {
-  background: rgba(59,130,246,0.25);
-  color: #93c5fd;
-
-  font-weight: 500;
-}
-
-/* ===== PERMISOS MÁS PRO ===== */
-
-.perm-item {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.05);
-}
-
-/* ===== INPUTS MENOS OPACOS ===== */
-
-.user-card .form input {
-  background: rgba(4, 15, 96, 0.73) !important;
-}
-
-.user-card .form input:focus {
-  background: rgba(93, 95, 94, 0.936) !important;
-}
-
-/* ===== BOTÓN CREATE MÁS PRO ===== */
-
-.user-card .btn-edit {
-  background: linear-gradient(135deg, #c88265, #facc15);
-  color: black;
-}
-
-/* ===== BOTÓN DELETE ===== */
-
-.user-card .btn-delete {
-  background: linear-gradient(135deg, #e04848, #b91c1c);
-}
-
 /* =========================
-   USERS - VISUAL PRO FINAL
+   CARDS (MISMO ESTILO QUE PREDICAS)
 ========================= */
 
 .user-create,
 .user-list {
-  border-radius: 50px;
-  padding: 25px;
+  border-radius: 16px;
+  padding: 28px;
 
-  /* 🔥 mismo fondo para ambos */
   background: linear-gradient(
-    135deg,
-    rgba(12, 43, 114, 0.75),
-    rgba(15, 125, 97, 0.941)
-  ) !important;
-
-  backdrop-filter: blur(12px);
+    145deg,
+    #0f172a 0%,
+    #0b2239 40%,
+    #063a2e 100%
+  );
 
   border: 1px solid rgba(59,130,246,0.25);
 
-  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  box-shadow:
+    0 10px 25px rgba(0,0,0,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.05);
 }
-
-/* ===== TITULOS ===== */
-
-.usuarios-title,
-.user-create h3,
-.user-list h3 {
-  color: #f1f5f9; /* blanco suave */
-  font-size: 22px;
-  font-weight: 600;
-  margin-bottom: 15px;
-}
-
-/* ===== FORM INPUTS ===== */
-
-.user-create input,
-.user-create textarea {
-  background: rgba(52, 169, 142, 0.945) !important;
-  color: #e5e7eb !important;
-  border: 1px solid rgba(255,255,255,0.08);
-}
-
-.user-create input::placeholder,
-.user-create textarea::placeholder {
-  color: #94a3b8;
-}
-
-/* ===== PERMISOS ===== */
-
-.perm-item {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.06);
-  color: #d2d7e1;
-}
-
-/* ===== TABLA ===== */
-
-.usuarios-table {
-  background: transparent;
-}
-
-.usuarios-table thead {
-  background: rgba(255,255,255,0.05);
-}
-
-.usuarios-table th {
-  color: #0f4b9e;
-}
-
-.usuarios-table td {
-  color: #e5e7eb;
-}
-
-/* 🔥 SACAMOS EL FONDO BLANCO */
-.usuarios-table tr {
-  background: transparent;
-}
-
-.usuarios-table tr:hover {
-  background: rgba(199, 246, 59, 0.12);
-}
-
-/* ===== BADGES ===== */
-
-.badge {
-  background: rgba(12, 89, 212, 0.774);
-  color: #93c5fd;
-}
-
-/* ===== BOTONES ===== */
-
-.btn-edit {
-  background: linear-gradient(135deg, #facc15, #9d7705);
-  color: black;
-}
-
-.btn-delete {
-  background: linear-gradient(135deg, #7f0303, #b91c1c);
-  color: white;
-}
-
-/* ===== BOTON CREATE ===== */
-
-.user-create .btn-edit {
-  background: linear-gradient(135deg, #22c55e, #16a34a);
-  color: white;
-}
-
-/* ===== SOMBRA SUAVE ENTRE BLOQUES ===== */
 
 .user-create {
   margin-bottom: 10px;
@@ -2035,3 +1856,539 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .user-list {
   margin-top: 10px;
 }
+
+/* =========================
+   TITULOS
+========================= */
+
+.usuarios-title {
+  color: #f1f5f9;
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+/* =========================
+   TABLA (FIX DEFINITIVO CONTRA .table)
+========================= */
+
+.usuarios-table,
+.table.usuarios-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  background: rgba(2, 6, 23, 0.85) !important;
+
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* HEADER */
+.usuarios-table thead,
+.table.usuarios-table thead {
+  background: rgba(30, 64, 175, 0.35) !important;
+}
+
+.usuarios-table th,
+.table.usuarios-table th {
+  padding: 14px;
+  text-align: left;
+
+  color: #93c5fd !important;
+  font-weight: 600;
+  font-size: 14px;
+
+  background: transparent !important;
+}
+
+/* FILAS */
+.usuarios-table td,
+.table.usuarios-table td {
+  padding: 14px;
+  color: #e2e8f0 !important;
+  font-size: 14px;
+
+  background: transparent !important;
+}
+
+/* SEPARADOR */
+.usuarios-table tr,
+.table.usuarios-table tr {
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+/* HOVER */
+.usuarios-table tbody tr:hover,
+.table.usuarios-table tbody tr:hover {
+  background: rgba(30, 157, 115, 0.25) !important;
+  transition: 0.2s;
+}
+
+/* =========================
+   BADGES
+========================= */
+
+.usuarios-table .badge {
+  background: rgba(59,130,246,0.25);
+  color: #93c5fd;
+}
+
+/* =========================
+   INPUTS
+========================= */
+
+.user-create input {
+  background: rgba(15, 23, 42, 0.9) !important;
+  color: #e5e7eb !important;
+}
+
+/* =========================
+   BOTONES
+========================= */
+
+.btn-edit {
+  background: linear-gradient(135deg, #facc15, #eab308);
+  color: black;
+}
+
+.btn-delete {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+}
+
+/* =========================
+   ACCIONES (FIX LAYOUT)
+========================= */
+
+.acciones {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.usuarios-table td:last-child {
+  white-space: nowrap;
+}
+
+.acciones .btn {
+  min-width: 95px;
+  text-align: center;
+}
+
+/* responsive */
+@media (max-width: 768px) {
+  .acciones {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* =========================
+   PERMISOS (FIX FINAL LIMPIO)
+========================= */
+
+.permisos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 15px;
+}
+
+/* cada permiso */
+.permisos label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 12px;
+  border-radius: 10px;
+
+  background: rgba(30, 41, 59, 0.8);
+
+  border: 1px solid rgba(255,255,255,0.08);
+
+  color: #e2e8f0;
+  font-size: 14px;
+  font-weight: 500;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* hover */
+.permisos label:hover {
+  background: rgba(59,130,246,0.25);
+  border-color: rgba(59,130,246,0.4);
+}
+
+/* checkbox */
+.permisos input[type="checkbox"] {
+  accent-color: #3b82f6;
+  transform: scale(1.1);
+}
+
+/* SOLO CAJA ACTIVA */
+.permisos label:has(input:checked) {
+  background: linear-gradient(
+    135deg,
+    rgba(59,130,246,0.35),
+    rgba(16,185,129,0.35)
+  );
+
+  border-color: rgba(59,130,246,0.6);
+
+  box-shadow: 0 0 12px rgba(59,130,246,0.4);
+}
+
+/* TEXTO LIMPIO */
+.permisos label span {
+  background: none !important;
+  color: #e2e8f0;
+}
+
+
+/***************************************************************************************************/
+
+
+
+/* =========================
+   ESTILOS DE PREDICAS ADMIN FINAL QUE IMPORTA REALMENTE
+========================= */
+
+.predica-create,
+.predica-list {
+  border-radius: 16px;
+  padding: 28px;
+
+  background: linear-gradient(
+    145deg,
+    #0f172a 0%,
+    #0b2239 40%,
+    #063a2e 100%
+  );
+
+  border: 1px solid rgba(59,130,246,0.25);
+
+  box-shadow:
+    0 10px 25px rgba(0,0,0,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+.predica-create {
+  margin-bottom: 25px;
+}
+
+/* =========================
+   TITULOS
+========================= */
+
+.predica-title {
+  color: #f8fafc;
+  font-weight: 600;
+  font-size: 20px;
+  margin-bottom: 18px;
+}
+
+/* =========================
+   TABLA
+========================= */
+
+.predica-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  background: rgba(2, 6, 23, 0.65);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.predica-table thead {
+  background: rgba(30, 64, 175, 0.25);
+}
+
+.predica-table th {
+  text-align: left;
+  padding: 14px;
+  color: #93c5fd;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.predica-table td {
+  padding: 14px;
+  color: #e2e8f0;
+  font-size: 14px;
+}
+
+.predica-table tr {
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.predica-table tbody tr:hover {
+  background: rgba(30, 157, 115, 0.25);
+  transition: 0.2s;
+}
+
+/* =========================
+   DESCRIPCION
+========================= */
+
+.predica-desc {
+  max-width: 320px;
+  color: #cbd5f5;
+}
+
+/* =========================
+   BOTONES
+========================= */
+
+.btn-download {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  padding: 7px 12px;
+  border-radius: 8px;
+  color: white;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  margin-right: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-download:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(34,197,94,0.4);
+}
+
+.btn-youtube {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  padding: 7px 12px;
+  border-radius: 8px;
+  color: rgba(255,255,255,0.9);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-youtube:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(239,68,68,0.4);
+}
+
+/* =========================
+   FIELDS
+========================= */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field label {
+  font-size: 13px;
+  color: #cbd5f5;
+  font-weight: 500;
+}
+
+.form input,
+.form textarea {
+  padding: 12px;
+  border-radius: 10px;
+
+  background: rgba(15, 23, 42, 0.9);
+  color: #f1f5f9;
+
+  border: 1px solid rgba(255,255,255,0.08);
+
+  transition: 0.2s;
+}
+
+.form input:focus,
+.form textarea:focus {
+  outline: none;
+  border: 1px solid #3b82f6;
+  box-shadow: 0 0 10px rgba(59,130,246,0.3);
+}
+
+.form input::placeholder,
+.form textarea::placeholder {
+  color: #94a3b8;
+}
+
+/* =========================
+   SELECTOR
+========================= */
+
+.tipo-selector {
+  display: flex;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+/* BASE */
+.btn-tipo {
+  flex: 1;
+  padding: 12px;
+
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+
+  font-weight: 600;
+  cursor: pointer;
+
+  background: rgba(15, 23, 42, 0.9);
+  color: #cbd5f5;
+
+  transition: all 0.25s ease;
+}
+
+/* 🔥 HOVER SOLO PARA INACTIVOS */
+.btn-tipo:not(.active-audio):not(.active-youtube):hover {
+  background: rgba(30, 64, 175, 0.25);
+  transform: translateY(-1px);
+}
+
+/* =========================
+   ACTIVO AUDIO
+========================= */
+
+.btn-tipo.active-audio {
+  background: linear-gradient(135deg, #facc15, #eab308);
+  color: black;
+
+  box-shadow:
+    0 0 15px rgba(250,204,21,0.5),
+    0 5px 15px rgba(0,0,0,0.3);
+
+  border: none;
+}
+
+/* 🔥 HOVER ACTIVO AUDIO */
+.btn-tipo.active-audio:hover {
+  background: linear-gradient(135deg, #ffd84a, #facc15);
+
+  box-shadow:
+    0 0 30px rgba(250,204,21,0.9),
+    0 10px 25px rgba(0,0,0,0.6);
+
+  transform: translateY(-2px) scale(1.02);
+}
+
+/* =========================
+   ACTIVO YOUTUBE
+========================= */
+
+.btn-tipo.active-youtube {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+
+  box-shadow:
+    0 0 15px rgba(239,68,68,0.5),
+    0 5px 15px rgba(0,0,0,0.3);
+
+  border: none;
+}
+
+/* 🔥 HOVER ACTIVO YOUTUBE (FIX REAL) */
+.btn-tipo.active-youtube:hover {
+  background: linear-gradient(135deg, #ff3b3b, #dc2626);
+
+  box-shadow:
+    0 0 30px rgba(239,68,68,0.9),
+    0 10px 25px rgba(0,0,0,0.6);
+
+  transform: translateY(-2px) scale(1.02);
+}
+
+/* CLICK */
+.btn-tipo:active {
+  transform: scale(0.97);
+}
+
+/****************************************************************************************************************/
+
+/* =========================
+   ESTILOS DE ALABANZAS ADMIN FINAL QUE IMPORTA REALMENTE
+========================= */
+
+.alabanza-create,
+.alabanza-list {
+  border-radius: 16px;
+  padding: 28px;
+
+  background: linear-gradient(
+    145deg,
+    #0f172a 0%,
+    #0b2239 40%,
+    #063a2e 100%
+  );
+
+  border: 1px solid rgba(34,197,94,0.25);
+
+  box-shadow:
+    0 10px 25px rgba(0,0,0,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+.alabanza-create {
+  margin-bottom: 25px;
+}
+
+.alabanza-title {
+  color: #f8fafc;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.alabanza-subtitle {
+  color: #cbd5f5;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+/* TABLA */
+
+.alabanza-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  background: rgba(2, 6, 23, 0.65);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.alabanza-table thead {
+  background: rgba(16,185,129,0.2);
+}
+
+.alabanza-table th {
+  padding: 14px;
+  text-align: left;
+  color: #86efac;
+  font-size: 14px;
+}
+
+.alabanza-table td {
+  padding: 14px;
+  color: #e2e8f0;
+  font-size: 14px;
+}
+
+.alabanza-table tr {
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.alabanza-table tbody tr:hover {
+  background: rgba(16,185,129,0.2);
+}
+
+/* descripcion */
+
+.alabanza-desc {
+  max-width: 300px;
+  color: #cbd5f5;
+}
+
+/****************************************************************************************************************/

@@ -55,7 +55,7 @@ export default function ListadoUsuarios() {
   return (
     <div className="usuarios-page">
 
-      {/* 🔥 CREATE */}
+      {/* CREATE */}
       <div className="card user-card user-create">
         <CreateUserForm
           userToEdit={userToEdit}
@@ -67,7 +67,7 @@ export default function ListadoUsuarios() {
         />
       </div>
 
-      {/* 🔥 LISTADO */}
+      {/* LISTADO */}
       <div className="card user-card user-list">
 
         <h3 className="usuarios-title">Listado de usuarios</h3>
@@ -103,30 +103,33 @@ export default function ListadoUsuarios() {
                   ))}
                 </td>
 
+                {/* 🔥 FIX PROFESIONAL */}
                 <td>
+                  <div className="acciones">
 
-                  {canEditar && (
-                    <button
-                      className="btn btn-edit"
-                      onClick={() => setUserToEdit(u)}
-                    >
-                      Editar
-                    </button>
-                  )}
+                    {canEditar && (
+                      <button
+                        className="btn btn-edit"
+                        onClick={() => setUserToEdit(u)}
+                      >
+                        Editar
+                      </button>
+                    )}
 
-                  {canEliminar && (
-                    <button
-                      className="btn btn-delete"
-                      onClick={() => setUserToDelete(u)}
-                    >
-                      Eliminar
-                    </button>
-                  )}
+                    {canEliminar && (
+                      <button
+                        className="btn btn-delete"
+                        onClick={() => setUserToDelete(u)}
+                      >
+                        Eliminar
+                      </button>
+                    )}
 
-                  {!canEditar && !canEliminar && (
-                    <span className="no-perm">Sin permisos</span>
-                  )}
+                    {!canEditar && !canEliminar && (
+                      <span className="no-perm">Sin permisos</span>
+                    )}
 
+                  </div>
                 </td>
 
               </tr>

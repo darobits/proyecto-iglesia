@@ -7,65 +7,80 @@ type Predica = {
   id: string
   titulo: string
   predicador: string
+  descripcion: string
   fecha: string
   audio_url: string | null
+  youtube_url?: string | null
 }
 
 export default function ListadoPredicas() {
   const [predicas, setPredicas] = useState<Predica[]>([])
 
   useEffect(() => {
-    let ignore = false
-
     async function load() {
       const { data, error } = await supabase
         .from("predicas")
         .select("*")
         .order("fecha", { ascending: false })
 
-      if (ignore) return
       if (error) return console.error(error.message)
 
       setPredicas(data || [])
     }
 
-    queueMicrotask(load)
-
-    return () => {
-      ignore = true
-    }
+    load()
   }, [])
 
   return (
-    <div className="card predica-card">
+    <div className="predica-list">
 
-      <h3>Prédicas</h3>
+      <h3 className="predica-title">Prédicas</h3>
 
-      <div className="predicas-grid">
+      <table className="predica-table">
 
-        {predicas.map((p) => (
-          <div key={p.id} className="predica-item">
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Predicador</th>
+            <th>Descripción</th>
+            <th>Fecha</th>
+            <th>Contenido</th>
+          </tr>
+        </thead>
 
-            <h4>{p.titulo}</h4>
+        <tbody>
+          {predicas.map(p => (
+            <tr key={p.id}>
 
-            <p className="predicador">
-              {p.predicador}
-            </p>
+              <td>{p.titulo}</td>
 
-            <span className="badge">
-              {new Date(p.fecha).toLocaleDateString()}
-            </span>
+              <td>{p.predicador}</td>
 
-            {p.audio_url && (
-              <audio controls className="audio-player">
-                <source src={p.audio_url} />
-              </audio>
-            )}
+              <td className="predica-desc">{p.descripcion}</td>
 
-          </div>
-        ))}
+              <td>
+                {new Date(p.fecha).toLocaleDateString()}
+              </td>
 
-      </div>
+              <td>
+                {p.audio_url && (
+                  <a href={p.audio_url} target="_blank" className="btn-download">
+                    Descargar MP3
+                  </a>
+                )}
+
+                {p.youtube_url && (
+                  <a href={p.youtube_url} target="_blank" className="btn-youtube">
+                    Ver video
+                  </a>
+                )}
+              </td>
+
+            </tr>
+          ))}
+        </tbody>
+
+      </table>
 
     </div>
   )

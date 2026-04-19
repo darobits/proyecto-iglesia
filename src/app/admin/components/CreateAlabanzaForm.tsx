@@ -6,12 +6,13 @@ import { supabase } from "@/lib/supabase"
 type TipoAlabanza = "audio" | "youtube"
 
 export default function CreateAlabanzaForm() {
-  const [titulo, setTitulo] = useState<string>("")
-  const [descripcion, setDescripcion] = useState<string>("")
-  const [fecha, setFecha] = useState<string>("")
+  const [titulo, setTitulo] = useState("")
+  const [descripcion, setDescripcion] = useState("")
+  const [fecha, setFecha] = useState("")
   const [tipo, setTipo] = useState<TipoAlabanza>("audio")
+
   const [audio, setAudio] = useState<File | null>(null)
-  const [youtube, setYoutube] = useState<string>("")
+  const [youtube, setYoutube] = useState("")
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -24,18 +25,15 @@ export default function CreateAlabanzaForm() {
     let audio_url: string | null = null
 
     if (tipo === "audio") {
-      if (!audio) {
-        alert("Debes subir un archivo MP3")
-        return
-      }
+      if (!audio) return alert("Debes subir un archivo MP3")
 
       const fileName = `${Date.now()}-${audio.name}`
 
-      const { error: uploadError } = await supabase.storage
+      const { error } = await supabase.storage
         .from("alabanzas")
         .upload(fileName, audio)
 
-      if (uploadError) return alert(uploadError.message)
+      if (error) return alert(error.message)
 
       const { data } = supabase.storage
         .from("alabanzas")
@@ -45,8 +43,7 @@ export default function CreateAlabanzaForm() {
     }
 
     if (tipo === "youtube" && !youtube) {
-      alert("Debes ingresar un link de YouTube")
-      return
+      return alert("Debes ingresar un link de YouTube")
     }
 
     const { error } = await supabase
@@ -66,50 +63,95 @@ export default function CreateAlabanzaForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Crear Alabanza</h2>
+    <div className="card alabanza-create">
 
-      <input
-        placeholder="Título"
-        value={titulo}
-        onChange={(e) => setTitulo(e.target.value)}
-      />
+      <h3 className="alabanza-title">Crear Alabanza</h3>
 
-      <textarea
-        placeholder="Descripción"
-        value={descripcion}
-        onChange={(e) => setDescripcion(e.target.value)}
-      />
+      <p className="alabanza-subtitle">Elegí el tipo de archivo:</p>
 
-      <input
-        type="date"
-        value={fecha}
-        onChange={(e) => setFecha(e.target.value)}
-      />
+      {/* SELECTOR */}
+      <div className="tipo-selector">
 
-      <select
-        value={tipo}
-        onChange={(e) => setTipo(e.target.value as TipoAlabanza)}
-      >
-        <option value="audio">Audio MP3</option>
-        <option value="youtube">YouTube</option>
-      </select>
+        <button
+          type="button"
+          className={`btn-tipo ${tipo === "audio" ? "active-audio" : ""}`}
+          onClick={() => setTipo("audio")}
+        >
+          🎧 Audio
+        </button>
 
-      {tipo === "audio" ? (
-        <input
-          type="file"
-          accept="audio/mp3"
-          onChange={(e) => setAudio(e.target.files?.[0] || null)}
-        />
-      ) : (
-        <input
-          placeholder="Link YouTube"
-          value={youtube}
-          onChange={(e) => setYoutube(e.target.value)}
-        />
-      )}
+        <button
+          type="button"
+          className={`btn-tipo ${tipo === "youtube" ? "active-youtube" : ""}`}
+          onClick={() => setTipo("youtube")}
+        >
+          ▶️ YouTube
+        </button>
 
-      <button type="submit">Crear</button>
-    </form>
+      </div>
+
+      <form onSubmit={handleSubmit} className="form">
+
+        <div className="form-grid">
+
+          <div className="field">
+            <label>Título</label>
+            <input
+              placeholder="Ej: Alabaré a mi Señor"
+              value={titulo}
+              onChange={(e) => setTitulo(e.target.value)}
+            />
+          </div>
+
+          <div className="field">
+            <label>Fecha</label>
+            <input
+              type="date"
+              value={fecha}
+              onChange={(e) => setFecha(e.target.value)}
+            />
+          </div>
+
+        </div>
+
+        <div className="field">
+          <label>Descripción</label>
+          <textarea
+            placeholder="Ej: Coro congregacional del domingo"
+            value={descripcion}
+            onChange={(e) => setDescripcion(e.target.value)}
+          />
+        </div>
+
+        <div className="field">
+
+          {tipo === "audio" ? (
+            <>
+              <label>Cargar archivo MP3</label>
+              <input
+                type="file"
+                accept="audio/mp3"
+                onChange={(e) => setAudio(e.target.files?.[0] || null)}
+              />
+            </>
+          ) : (
+            <>
+              <label>Link de YouTube</label>
+              <input
+                placeholder="https://youtube.com/..."
+                value={youtube}
+                onChange={(e) => setYoutube(e.target.value)}
+              />
+            </>
+          )}
+
+        </div>
+
+        <button className="btn-go" type="submit">
+          Crear Alabanza
+        </button>
+
+      </form>
+    </div>
   )
 }
